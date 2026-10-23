@@ -2,6 +2,7 @@ local map={}
 local sheet=require('lib.sheet')
 
 function map:init()
+    self.sheet=sheet
     self.tileset=assets.maps.tileset
     self.tilewidth,self.tileheight=8,8
     self.quads=sheet:init(assets.maps.tileset,self.tilewidth,self.tileheight)
