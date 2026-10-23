@@ -7,12 +7,9 @@ function map:init()
     self.tilewidth,self.tileheight=8,8
     self.quads=sheet:init(assets.maps.tileset,self.tilewidth,self.tileheight)
 
-    local w,h=conf.gw/self.tilewidth,conf.gh/self.tileheight
+    
 
-    self.data={
-        tiles=createMap(w,h),
-        flags=createMap(w,h)
-    }
+    self:clear()
 end
 
 function map:update()
@@ -34,6 +31,14 @@ end
 
 function map:set(x,y,t)
     self.data.tiles[y][x]=t
+end
+
+function map:clear()
+    local w,h=conf.gw/self.tilewidth,conf.gh/self.tileheight
+    self.data={
+        tiles=createMap(w,h),
+        flags=createMap(w,h)
+    }
 end
 
 return map

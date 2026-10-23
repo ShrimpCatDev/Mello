@@ -5,9 +5,11 @@ function love.load()
     require('lib.require')
     conf=require('config')
     require('lib.func')
+    json=require('lib.json')
+    lg.setLineStyle("rough")
 
     shove=require('lib.shove')
-    shove.setResolution(conf.gw,conf.gh,{fitMethod=conf.fit,renderMode=conf.render})
+    shove.setResolution(conf.gw,conf.gh,{fitMethod=conf.fit,renderMode=conf.rendermode})
     shove.setWindowMode(conf.ww,conf.wh,{resizable=true})
     shove.setScalingFilter(conf.filter)
 
