@@ -21,3 +21,15 @@ function math.dist(x1, y1, x2, y2)
     local dy = y1 - y2
     return math.sqrt(dx * dx + dy * dy)
 end
+
+function createMap(w,h)
+    local map={}
+    for y=1,h do
+        local t={}
+        for x=1,w do
+            table.insert(t,0)
+        end
+        table.insert(map,t)
+    end
+    return map
+end

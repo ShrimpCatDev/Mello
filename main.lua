@@ -4,6 +4,7 @@ lg=love.graphics
 function love.load()
     require('lib.require')
     conf=require('config')
+    require('lib.func')
 
     shove=require('lib.shove')
     shove.setResolution(conf.gw,conf.gh,{fitMethod=conf.fit,renderMode=conf.render})
@@ -23,7 +24,7 @@ function love.load()
 
     gs=require('lib.hump.gamestate')
     gs.registerEvents()
-    gs.switch(states.example)
+    gs.switch(states.editor)
 end
 
 function love.update(dt)

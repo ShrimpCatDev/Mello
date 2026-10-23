@@ -1,7 +1,7 @@
 local conf={}
 
-conf.gw=160
-conf.gh=144
+conf.gw=144
+conf.gh=128
 
 conf.ww=conf.gw*4
 conf.wh=conf.gh*4
