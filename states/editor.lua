@@ -40,6 +40,21 @@ function exp:draw()
     shove.beginDraw()
         shove.beginLayer("map")
             if self.mode=="draw" then
+                local colors={
+                    {0.05,0.05,0.1},
+                    {0.1,0.1,0.15}
+                }
+
+                for y=-1,(conf.gh/8) do
+                    for x=-1,(conf.gw/8) do
+                        lg.setColor(colors[(x+y)%2+1])
+                        local xx=(x*8)+(love.timer.getTime()*4)%8
+                        local yy=(y*8)+(love.timer.getTime()*4)%8
+                        lg.rectangle("fill",xx,yy,8,8)
+                    end
+                end
+                lg.setColor(1,1,1,1)
+
                 self.map:draw()
 
                 lg.setColor(1,1,1,0.4)
