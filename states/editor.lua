@@ -5,9 +5,24 @@ function exp:enter()
     self.map:init()
     self.selectedTile=1
     self.mouse={x=0,y=0}
-    self.mode="draw"
+
+    self.modes={"draw","select"}
+    self.selectedMode=1
+    self.mode=self.modes[self.selectedMode]
 
     self.name="test"
+
+    self.bar={
+        y=-8,
+        icons={
+            558,
+            559
+        },
+        modes={
+            "terrain","flags"
+        },
+        mode=1
+    }
 
     shove.createLayer("map")
 
@@ -53,14 +68,28 @@ function exp:draw()
                         lg.rectangle("fill",xx,yy,8,8)
                     end
                 end
-                lg.setColor(1,1,1,1)
 
+                lg.setColor(1,1,1,1)
                 self.map:draw()
 
                 lg.setColor(1,1,1,0.4)
-                local col,row=math.floor(self.mouse.x/8),math.floor(self.mouse.y/8)
-                self.map:drawTile(self.selectedTile,col*8,row*8)
+                local x,y=math.floor(self.mouse.x/8)*8,math.floor(self.mouse.y/8)*8
+
+                if self.bar.modes[self.bar.mode]=="terrain" then
+                    self.map:drawTile(self.selectedTile,x,y)
+                else
+
+                end
                 lg.setColor(1,1,1,1)
+
+                lg.push()
+                lg.translate(0,self.bar.y)
+                    lg.setColor(0,0,0,1)
+                    lg.rectangle("fill",0,0,conf.gw,8)
+                    lg.setColor(1,1,1,1)
+                    self.map:drawTile(self.bar.icons[self.bar.mode],0,0)
+                    lg.print(self.bar.modes[self.bar.mode],10,1)
+                lg.pop()
             end
 
             if self.mode=="select" then
@@ -74,18 +103,29 @@ function exp:draw()
 end
 
 function exp:keypressed(k)
-    if k=="s" then
-        self.mode="select"
-    end
-    if k=="d" then
-        self.mode="draw"
-    end
     if k=="c" then
         self.map:clear()
     end
-    if k=="e" then
+    if k=="tab" then
+        self.bar.mode=self.bar.mode+1
+        self.bar.mode=((self.bar.mode-1)%#self.bar.modes)+1
+        print(self.bar.mode)
+
+        timer.tween(0.2,self.bar,{y=0},"out-cubic",function()
+            timer.after(0.8,function()
+                timer.tween(0.2,self.bar,{y=-8},"out-cubic")
+            end)
+        end)
+    end
+    if k=="space" and self.bar.modes[self.bar.mode]=="terrain" then
+        self.selectedMode=self.selectedMode+1
+        self.selectedMode=((self.selectedMode-1)%#self.modes)+1
+        self.mode=self.modes[self.selectedMode]
+    end
+    if k=="s" and love.keyboard.isDown("lctrl") then
         local data=json.encode(self.map.data)
-        love.filesystem.write("test.json",data)
+        love.filesystem.write(self.name..".json",data)
+        print("saved "..self.name..".json")
     end
 end
 

@@ -24,13 +24,15 @@ function love.load()
     
     states=require.tree('states')
 
+    timer=require('lib.hump.timer')
+
     gs=require('lib.hump.gamestate')
     gs.registerEvents()
     gs.switch(states.editor)
 end
 
 function love.update(dt)
-
+    timer.update(dt)
 end
 
 function love.draw()
