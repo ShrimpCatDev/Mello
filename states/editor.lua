@@ -1,33 +1,24 @@
 local exp={}
 
 function exp:enter()
-    self.colors={
-        {0.1,0.1,0.1},
-        {0.1,0.5,1}
-    }
+    self.map=require("map")
+    self.map:init()
+
     shove.createLayer("map")
-
-    self.ts=8
-    local w,h=conf.gw/self.ts,conf.gh/self.ts
-
-    self.map=createMap(w,h)
-    
 end
 
 function exp:update(dt)
-
+    local inside,mx,my=shove.mouseToViewport()
+    if inside and love.mouse.isDown(1) then
+        local col,row=math.floor(mx/8)+1,math.floor(my/8)+1
+        self.map:set(col,row,1)
+    end
 end
 
 function exp:draw()
     shove.beginDraw()
         shove.beginLayer("map")
-            for row,i in ipairs(self.map) do
-                for col,j in ipairs(i) do
-                    lg.setColor(self.colors[j+1])
-                    local x,y=(col-1)*self.ts,(row-1)*self.ts
-                    lg.rectangle("fill",x,y,self.ts,self.ts)
-                end
-            end
+            self.map:draw()
         shove.endLayer()
     shove.endDraw()
 end
