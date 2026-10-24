@@ -1,5 +1,9 @@
 local exp={}
 
+function exp:init()
+    shove.createLayer("map")
+end
+
 function exp:enter()
     self.map=require("map")
     self.map:init()
@@ -23,8 +27,6 @@ function exp:enter()
         },
         mode=1
     }
-
-    shove.createLayer("map")
 
     local data=love.filesystem.read("test.json")
     if data then

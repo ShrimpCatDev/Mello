@@ -7,8 +7,6 @@ function map:init()
     self.tilewidth,self.tileheight=8,8
     self.quads=sheet:init(assets.maps.tileset,self.tilewidth,self.tileheight)
 
-    
-
     self:clear()
 end
 
