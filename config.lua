@@ -15,8 +15,9 @@ conf.input={
     controls={
         right={'key:d',"key:right","button:dpright"},
         left={'key:a',"key:left","button:dpleft"},
-        jump={'key:w',"key:up","key:space","key:z","button:a"},
-        start={"key:space","key:z","key:return","button:a","button:start"}
+        up={'key:w',"key:up","button:dpup"},
+        down={'key:s',"key:down","button:dpdown"},
+        jump={"key:space","key:z","button:a"},
     },
     joystick = love.joystick.getJoysticks()[1]
 }

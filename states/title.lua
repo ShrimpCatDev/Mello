@@ -7,6 +7,14 @@ function title:init()
     }
     self.menu={
         items={"Start","Level Editor"},
+        funcs={
+            function(s)
+                print("hi")
+            end,
+            function(s)
+                gs.switch(states.editor)
+            end
+        },
         x=conf.gw/2,
         y=conf.gh/2,
         sel=1
@@ -18,7 +26,18 @@ function title:enter()
 end
 
 function title:update(dt)
-
+    if input:pressed("down") then
+        self.menu.sel=self.menu.sel+1
+    end
+    if input:pressed("up") then
+        self.menu.sel=self.menu.sel-1
+    end
+    if self.menu.sel>#self.menu.items then self.menu.sel=1 end
+    if self.menu.sel<1 then self.menu.sel=#self.menu.items end
+    if input:pressed("jump") then
+        local f=self.menu.funcs[self.menu.sel]
+        f(self)
+    end
 end
 
 function title:draw()
