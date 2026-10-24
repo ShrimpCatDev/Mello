@@ -1,5 +1,12 @@
 local pl={}
 
+local function filter(item,other)
+    if other.flag==1 then
+        return "slide"
+    end
+    return "cross"
+end
+
 function pl:init(parent,x,y)
     self.parent=parent
     self.x=x
@@ -8,15 +15,44 @@ function pl:init(parent,x,y)
     self.vy=0
     self.w=8
     self.h=8
+    self.speed=120
+    self.jumpHeight=160
+    self.dir=1
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
 end
 
 function pl:update(dt)
     --YOINKED from another one of my games :3
+    self.jump=false
     self.vy=self.vy+self.parent.world.gravity*dt
     self.y=self.y+self.vy*dt
+
+    if input:down("right") then
+        self.vx=self.speed
+        self.dir=1
+    elseif input:down("left") then
+        self.vx=-self.speed
+        self.dir=-1
+    else
+        self.vx=0
+    end
+    self.x=self.x+self.vx*dt
+
     local ax,ay,col,len=self.parent.world:move(self,self.x,self.y,self.filter)
     self.x,self.y=ax,ay
+
+    for k,v in ipairs(col) do
+        if v.other.flag==1 and v.normal.y<0 then
+            self.vy=0
+            self.jump=true
+        end
+    end
+
+    if self.jump then
+        if input:pressed("jump") then
+            self.vy=-self.jumpHeight
+        end
+    end
 end
 
 function pl:draw()

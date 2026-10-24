@@ -7,7 +7,7 @@ end
 function level:enter()
     local bump=require('lib.bump')
     self.world=bump.newWorld(8)
-    self.world.gravity=240
+    self.world.gravity=400
 
     self.player=require('entity.player')
     self.player:init(self,8,8)
