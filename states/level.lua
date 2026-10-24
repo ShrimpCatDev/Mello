@@ -1,18 +1,21 @@
 local level={}
 
 function level:init()
-    local bump=require('lib.bump')
-    self.world=bump.newWorld(8)
-    self.world.gravity=240
-    self.player=require('entity.player')
-    self.player:init(self,8,8)
     shove.createLayer("terrain")
 end
 
 function level:enter()
+    local bump=require('lib.bump')
+    self.world=bump.newWorld(8)
+    self.world.gravity=240
+
+    self.player=require('entity.player')
+    self.player:init(self,8,8)
+
     self.map=require("map")
     self.map:init()
     self.map:load("levels/level1.json")
+    self.map:initBump(self.world)
 end
 
 function level:update(dt)

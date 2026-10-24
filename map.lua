@@ -6,6 +6,7 @@ function map:init()
         {0,0,0,0},
         {1,0.2,0,0.5}
     }
+    self.cols={}
     self.sheet=sheet
     self.tileset=assets.maps.tileset
     self.tilewidth,self.tileheight=8,8
@@ -21,6 +22,31 @@ function map:load(name)
         return data
     end
     return nil
+end
+
+function map:initBump(world)
+    for k,v in pairs(self.cols) do
+        world:remove(v)
+    end
+
+    self.cols={}
+    
+    for row,i in ipairs(self.data.flags) do
+        for col,v in ipairs(i) do
+            if v~=0 then
+                local x,y=(col-1)*self.tilewidth,(row-1)*self.tileheight
+                local t={
+                    x=x,
+                    y=y,
+                    w=self.tilewidth,
+                    h=self.tileheight,
+                    flag=v
+                }
+                table.insert(self.cols,t)
+                world:add(t,x,y,self.tilewidth,self.tileheight)
+            end
+        end
+    end
 end
 
 function map:update()
