@@ -12,13 +12,17 @@ function title:init()
                 print("hi")
             end,
             function(s)
-                gs.switch(states.editor)
+                self.textInput:spawn(function(output)
+                    gs.switch(states.editor,output)
+                end)
             end
         },
         x=conf.gw/2,
         y=conf.gh/2,
         sel=1
     }
+    self.textInput=require('utils.textInput')
+    self.textInput:init()
 end
 
 function title:enter()
@@ -26,17 +30,20 @@ function title:enter()
 end
 
 function title:update(dt)
-    if input:pressed("down") then
-        self.menu.sel=self.menu.sel+1
-    end
-    if input:pressed("up") then
-        self.menu.sel=self.menu.sel-1
-    end
-    if self.menu.sel>#self.menu.items then self.menu.sel=1 end
-    if self.menu.sel<1 then self.menu.sel=#self.menu.items end
-    if input:pressed("jump") then
-        local f=self.menu.funcs[self.menu.sel]
-        f(self)
+    if not self.textInput.open then
+        if input:pressed("down") then
+            self.menu.sel=self.menu.sel+1
+        end
+        if input:pressed("up") then
+            self.menu.sel=self.menu.sel-1
+        end
+        if self.menu.sel>#self.menu.items then self.menu.sel=1 end
+        if self.menu.sel<1 then self.menu.sel=#self.menu.items end
+        if input:pressed("jump") then
+            local f=self.menu.funcs[self.menu.sel]
+            
+            f(self)
+        end
     end
 end
 
@@ -60,8 +67,18 @@ function title:draw()
                 end
                 lg.print(s,self.menu.x-font:getWidth(s)/2,(k-1)*(font:getHeight()+1)+self.menu.y)
             end
+            lg.setColor(1,1,1,1)
+            self.textInput:draw()
         shove.endLayer()
     shove.endDraw()
 end
+
+function title:textinput(k)
+    self.textInput:input(k)
+end
+
+function title:keypressed(k)
+    self.textInput:key(k)
+end 
 
 return title

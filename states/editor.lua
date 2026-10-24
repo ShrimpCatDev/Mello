@@ -4,7 +4,7 @@ function exp:init()
     shove.createLayer("map")
 end
 
-function exp:enter()
+function exp:enter(prev,name)
     self.map=require("map")
     self.map:init()
     self.selectedTile=1
@@ -14,7 +14,7 @@ function exp:enter()
     self.selectedMode=1
     self.mode=self.modes[self.selectedMode]
 
-    self.name="test"
+    self.name=name
 
     self.bar={
         y=-8,
@@ -28,12 +28,10 @@ function exp:enter()
         mode=1
     }
 
-    local data=love.filesystem.read("test.json")
+    local data=love.filesystem.read(self.name..".json")
     if data then
         print("map exists!")
         self.map.data=json.decode(data)
-    else
-        print("no map twt")
     end
 end
 
