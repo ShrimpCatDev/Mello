@@ -2,12 +2,14 @@ local exp={}
 
 function exp:init()
     shove.createLayer("map")
+    
 end
 
 function exp:enter(prev,name)
     self.map=require("map")
     self.map:init()
     self.selectedTile=1
+    self.selectedFlag=1
     self.mouse={x=0,y=0}
 
     self.modes={"draw","select"}
@@ -39,13 +41,20 @@ function exp:update(dt)
     local inside,mx,my=shove.mouseToViewport()
     self.mouse.x,self.mouse.y=mx,my
     if inside then
-        if self.mode=="draw" then
+        local col,row=math.floor(mx/8)+1,math.floor(my/8)+1
+        if self.bar.mode==1 then
+            if self.mode=="draw" then
+                if love.mouse.isDown(1) then
+                    self.map:set(col,row,self.selectedTile)
+                elseif love.mouse.isDown(2) then
+                    self.map:set(col,row,0)
+                end
+            end
+        else
             if love.mouse.isDown(1) then
-                local col,row=math.floor(mx/8)+1,math.floor(my/8)+1
-                self.map:set(col,row,self.selectedTile)
+                self.map:flag(col,row,self.selectedTile)
             elseif love.mouse.isDown(2) then
-                local col,row=math.floor(mx/8)+1,math.floor(my/8)+1
-                self.map:set(col,row,0)
+                self.map:flag(col,row,0)
             end
         end
     end
@@ -90,6 +99,10 @@ function exp:draw()
                     self.map:drawTile(self.bar.icons[self.bar.mode],0,0)
                     lg.print(self.bar.modes[self.bar.mode],10,1)
                 lg.pop()
+
+                if self.bar.mode==2 then
+                    self.map:drawFlags()
+                end
             end
 
             if self.mode=="select" then

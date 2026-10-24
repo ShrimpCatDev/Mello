@@ -2,6 +2,10 @@ local map={}
 local sheet=require('lib.sheet')
 
 function map:init()
+    self.flagColors={
+        {0,0,0,0},
+        {1,0.2,0,0.5}
+    }
     self.sheet=sheet
     self.tileset=assets.maps.tileset
     self.tilewidth,self.tileheight=8,8
@@ -23,12 +27,27 @@ function map:draw()
     end
 end
 
+function map:drawFlags()
+    for row,i in ipairs(self.data.flags) do
+        for col,v in ipairs(i) do
+            local x,y=(col-1)*self.tilewidth,(row-1)*self.tileheight
+            lg.setColor(self.flagColors[v+1])
+            lg.rectangle("fill",x,y,self.tilewidth,self.tileheight)
+        end
+    end
+    lg.setColor(1,1,1,1)
+end
+
 function map:drawTile(t,x,y)
     sheet:draw(t,x,y)
 end
 
 function map:set(x,y,t)
     self.data.tiles[y][x]=t
+end
+
+function map:flag(x,y,t)
+    self.data.flags[y][x]=t
 end
 
 function map:clear()

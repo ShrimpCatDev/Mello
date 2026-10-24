@@ -19,7 +19,7 @@ function title:init()
         },
         x=conf.gw/2,
         y=conf.gh/2,
-        sel=1
+        sel=2
     }
     self.textInput=require('utils.textInput')
     self.textInput:init()
