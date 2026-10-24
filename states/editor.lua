@@ -30,7 +30,7 @@ function exp:enter(prev,name)
         mode=1
     }
 
-    self.map:load(self.name..".json")
+    self.map:load("levels/"..self.name..".json")
 end
 
 function exp:update(dt)
@@ -48,7 +48,7 @@ function exp:update(dt)
             end
         else
             if love.mouse.isDown(1) then
-                self.map:flag(col,row,self.selectedTile)
+                self.map:flag(col,row,self.selectedFlag)
             elseif love.mouse.isDown(2) then
                 self.map:flag(col,row,0)
             end
@@ -98,6 +98,7 @@ function exp:draw()
 
                 if self.bar.mode==2 then
                     self.map:drawFlags()
+                    lg.print("Flag: "..tostring(self.selectedFlag),1,conf.gh-7)
                 end
             end
 
@@ -133,8 +134,16 @@ function exp:keypressed(k)
     end
     if k=="s" and love.keyboard.isDown("lctrl") then
         local data=json.encode(self.map.data)
-        love.filesystem.write(self.name..".json",data)
+        love.filesystem.write("levels/"..self.name..".json",data)
         print("saved "..self.name..".json")
+    end
+    if self.bar.mode==2 then
+        if k=="up" then
+            self.selectedFlag=self.selectedFlag+1
+        end
+        if k=="down" then
+            self.selectedFlag=self.selectedFlag-1
+        end
     end
 end
 

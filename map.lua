@@ -4,7 +4,8 @@ local sheet=require('lib.sheet')
 function map:init()
     self.flagColors={
         {0,0,0,0},
-        {1,0.2,0,0.5}
+        {1,0.2,0,0.5},
+        {0.2,0.8,1,0.5}
     }
     self.cols={}
     self.sheet=sheet
@@ -30,7 +31,7 @@ function map:initBump(world)
     end
 
     self.cols={}
-    
+
     for row,i in ipairs(self.data.flags) do
         for col,v in ipairs(i) do
             if v~=0 then
