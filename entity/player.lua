@@ -13,6 +13,17 @@ local function filter(item,other)
     return "cross"
 end
 
+local function bfilter(item,other)
+    if other.flag then
+        if other.flag~=0 then
+            return "slide"
+        else
+            return nil
+        end
+    end
+    return "cross"
+end
+
 function pl:init(parent,x,y)
     self.parent=parent
     self.x=x
@@ -25,6 +36,8 @@ function pl:init(parent,x,y)
     self.jumpHeight=160
     self.dir=1
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
+
+    self.bullets={}
 end
 
 function pl:update(dt)
@@ -64,10 +77,44 @@ function pl:update(dt)
             self.vy=-self.jumpHeight
         end
     end
+
+    local spd=80
+    if input:pressed("shoot") then
+        local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70}
+        self.parent.world:add(b,b.x,b.y,b.w,b.h)
+        table.insert(self.bullets,b)
+    end
+
+    for k,v in ipairs(self.bullets) do
+        v.vy=v.vy+self.parent.world.gravity*dt
+        v.y=v.y+v.vy*dt
+        v.x=v.x+v.vx*dt
+        local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,bfilter)
+        v.x,v.y=ax,ay
+
+        for k,h in ipairs(col) do
+            if (h.other.flag==1 or h.other.flag==2) and h.normal.y<0 then
+                v.vy=-math.random(spd-10,spd)
+            end
+
+            if (h.other.flag==1 or h.other.flag==2) and h.normal.y>0 then
+                self.vy=0
+            end
+
+            if (h.other.flag==1 or h.other.flag==2) and h.normal.x~=0 and h.normal.y==0 then
+                v.vx=spd*h.normal.x
+            end
+        end
+    end
 end
 
 function pl:draw()
     --lg.rectangle("fill",self.x,self.y,self.w,self.h)
+
+    for k,v in ipairs(self.bullets) do
+        sheet:draw(v.s,v.x,v.y)
+    end
+
     local o=0
     if self.dir==-1 then
         o=8

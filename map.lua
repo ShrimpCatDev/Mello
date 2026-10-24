@@ -54,11 +54,12 @@ function map:update()
 
 end
 
-function map:draw()
+function map:draw(ox,oy)
+    local xx,yy=ox or 0,oy or 0
     for row,i in ipairs(self.data.tiles) do
         for col,v in ipairs(i) do
             local x,y=(col-1)*self.tilewidth,(row-1)*self.tileheight
-            sheet:draw(v,x,y)
+            sheet:draw(v,x+xx,y+yy)
         end
     end
 end
