@@ -14,6 +14,15 @@ function map:init()
     self:clear()
 end
 
+function map:load(name)
+    local data=love.filesystem.read(name)
+    if data then
+        self.data=json.decode(data)
+        return data
+    end
+    return nil
+end
+
 function map:update()
 
 end

@@ -9,7 +9,7 @@ function title:init()
         items={"Start","Level Editor"},
         funcs={
             function(s)
-                print("hi")
+                gs.switch(states.level)
             end,
             function(s)
                 self.textInput:spawn(function(output)

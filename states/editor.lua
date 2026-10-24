@@ -30,11 +30,7 @@ function exp:enter(prev,name)
         mode=1
     }
 
-    local data=love.filesystem.read(self.name..".json")
-    if data then
-        print("map exists!")
-        self.map.data=json.decode(data)
-    end
+    self.map:load(self.name..".json")
 end
 
 function exp:update(dt)

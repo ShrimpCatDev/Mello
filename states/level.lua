@@ -1,0 +1,42 @@
+local level={}
+
+function level:init()
+    local bump=require('lib.bump')
+    self.world=bump.newWorld(8)
+    shove.createLayer("terrain")
+end
+
+function level:enter()
+    self.map=require("map")
+    self.map:init()
+    self.map:load("levels/level1.json")
+end
+
+function level:update(dt)
+
+end
+
+function level:draw()
+    shove.beginDraw()
+        shove.beginLayer("terrain")
+            local colors={
+                {0.05,0.05,0.1},
+                {0.1,0.1,0.15}
+            }
+
+            for y=-1,(conf.gh/8) do
+                for x=-1,(conf.gw/8) do
+                    lg.setColor(colors[(x+y)%2+1])
+                    local xx=(x*8)+(love.timer.getTime()*4)%8
+                    local yy=(y*8)+(love.timer.getTime()*4)%8
+                    lg.rectangle("fill",xx,yy,8,8)
+                end
+            end
+
+            lg.setColor(1,1,1,1)
+            self.map:draw()
+        shove.endLayer()
+    shove.endDraw()
+end
+
+return level
