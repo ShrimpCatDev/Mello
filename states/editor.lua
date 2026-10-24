@@ -22,15 +22,25 @@ function exp:enter(prev,name)
         y=-8,
         icons={
             558,
-            559
+            559,
+            540
         },
         modes={
-            "terrain","flags"
+            "terrain","flags","sprites"
         },
         mode=1
     }
 
+    self.sprites={
+        {id="player",x=8,y=conf.gh-16,sprite=504,w=8,h=8,canRemove=false,kill=false}
+    }
+    self.drag={
+        active=nil,
+        ox=0,oy=0
+    }
+
     self.map:load("levels/"..self.name..".json")
+    if self.map.data.sprites then self.sprites=self.map.data.sprites end
 end
 
 function exp:update(dt)
@@ -46,12 +56,15 @@ function exp:update(dt)
                     self.map:set(col,row,0)
                 end
             end
-        else
+        elseif self.bar.mode==2 then
             if love.mouse.isDown(1) then
                 self.map:flag(col,row,self.selectedFlag)
             elseif love.mouse.isDown(2) then
                 self.map:flag(col,row,0)
             end
+        elseif self.drag.active then
+            self.drag.active.x=self.mouse.x-self.drag.ox
+            self.drag.active.y=self.mouse.y-self.drag.oy
         end
     end
 end
@@ -75,6 +88,9 @@ function exp:draw()
                 end
 
                 lg.setColor(1,1,1,1)
+                if self.bar.mode==3 then
+                    lg.setColor(1,1,1,0.5)
+                end
                 self.map:draw()
 
                 lg.setColor(1,1,1,0.4)
@@ -85,6 +101,15 @@ function exp:draw()
                 else
 
                 end
+                lg.setColor(1,1,1,0.5)
+
+                if self.bar.mode==3 then
+                    lg.setColor(1,1,1,1)
+                end
+                for k,v in ipairs(self.sprites) do
+                    self.map:drawTile(v.sprite,v.x,v.y)
+                end
+
                 lg.setColor(1,1,1,1)
 
                 lg.push()
@@ -133,6 +158,7 @@ function exp:keypressed(k)
         self.mode=self.modes[self.selectedMode]
     end
     if k=="s" and love.keyboard.isDown("lctrl") then
+        self.map.data.sprites=self.sprites
         local data=json.encode(self.map.data)
         love.filesystem.write("levels/"..self.name..".json",data)
         print("saved "..self.name..".json")
@@ -161,6 +187,24 @@ function exp:mousepressed(x,y,b)
                 self.selectedTile=sel
                 print(sel)
             end
+        end
+        if self.bar.mode==3 then
+            for k,v in ipairs(self.sprites) do
+                if math.collision(v.x,v.y,v.w,v.h,mx,my,1,1) then
+                    self.drag.active=v
+                    self.drag.ox=mx-v.x
+                    self.drag.oy=my-v.y
+                end
+            end
+        end
+    end
+end
+
+function exp:mousereleased(x,y,b)
+    local inside,mx,my=shove.screenToViewport(x,y)
+    if inside and b==1 then
+        if self.bar.mode==3 and self.drag.active then
+            self.drag.active=nil
         end
     end
 end

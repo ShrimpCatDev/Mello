@@ -10,12 +10,19 @@ function level:enter()
     self.world.gravity=400
 
     self.player=require('entity.player')
-    self.player:init(self,8,8)
 
     self.map=require("map")
     self.map:init()
     self.map:load("levels/level1.json")
     self.map:initBump(self.world)
+
+    local spawnX,spawnY=8,conf.gh-18
+    for _,v in ipairs(self.map.data.sprites or {}) do
+        if v.id=="player" then
+            spawnX,spawnY=v.x+1,v.y
+        end
+    end
+    self.player:init(self,spawnX,spawnY)
 
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
 end

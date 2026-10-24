@@ -26,13 +26,13 @@ end
 
 function pl:init(parent,x,y)
     self.parent=parent
-    self.x=x
-    self.y=y
+    self.x=x or 0
+    self.y=y or 0
     self.vx=0
     self.vy=0
     self.w=6
     self.h=7
-    self.speed=80
+    self.speed=70
     self.jumpHeight=160
     self.dir=1
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
