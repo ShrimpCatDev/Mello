@@ -47,4 +47,10 @@ function level:draw()
     shove.endDraw()
 end
 
+function level:keypressed(k)
+    if k=="escape" then
+        gs.switch(states.title)
+    end
+end
+
 return level

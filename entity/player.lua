@@ -21,7 +21,7 @@ function pl:init(parent,x,y)
     self.vy=0
     self.w=8
     self.h=8
-    self.speed=120
+    self.speed=80
     self.jumpHeight=160
     self.dir=1
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
@@ -44,22 +44,6 @@ function pl:update(dt)
         self.vx=0
     end
     self.x=self.x+self.vx*dt
-
-    if self.y<-self.h then
-        self.y=conf.gh
-        self.parent.world:update(self,self.x,self.y)
-    elseif self.y>conf.gh then
-        self.y=-self.h
-        self.parent.world:update(self,self.x,self.y)
-    end
-
-    if self.x<-self.w then
-        self.x=conf.gw
-        self.parent.world:update(self,self.x,self.y)
-    elseif self.x>conf.gw then
-        self.x=-self.w
-        self.parent.world:update(self,self.x,self.y)
-    end
 
     local ax,ay,col,len=self.parent.world:move(self,self.x,self.y,filter)
     self.x,self.y=ax,ay

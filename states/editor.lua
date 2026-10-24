@@ -145,6 +145,9 @@ function exp:keypressed(k)
             self.selectedFlag=self.selectedFlag-1
         end
     end
+    if k=="escape" then
+        gs.switch(states.title)
+    end
 end
 
 function exp:mousepressed(x,y,b)
