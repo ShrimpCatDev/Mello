@@ -3,6 +3,9 @@ local level={}
 function level:init()
     local bump=require('lib.bump')
     self.world=bump.newWorld(8)
+    self.world.gravity=240
+    self.player=require('entity.player')
+    self.player:init(self,8,8)
     shove.createLayer("terrain")
 end
 
@@ -13,7 +16,7 @@ function level:enter()
 end
 
 function level:update(dt)
-
+    self.player:update(dt)
 end
 
 function level:draw()
@@ -35,6 +38,8 @@ function level:draw()
 
             lg.setColor(1,1,1,1)
             self.map:draw()
+
+            self.player:draw()
         shove.endLayer()
     shove.endDraw()
 end
