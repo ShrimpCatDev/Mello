@@ -80,12 +80,13 @@ function pl:update(dt)
 
     local spd=80
     if input:pressed("shoot") then
-        local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70}
+        local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
         self.parent.world:add(b,b.x,b.y,b.w,b.h)
         table.insert(self.bullets,b)
     end
 
     for k,v in ipairs(self.bullets) do
+        v.timer=v.timer-dt
         v.vy=v.vy+self.parent.world.gravity*dt
         v.y=v.y+v.vy*dt
         v.x=v.x+v.vx*dt
@@ -94,16 +95,27 @@ function pl:update(dt)
 
         for k,h in ipairs(col) do
             if (h.other.flag==1 or h.other.flag==2) and h.normal.y<0 then
-                v.vy=-math.random(spd-10,spd)
+                v.vy=-math.abs(v.vy)*0.8
             end
 
             if (h.other.flag==1 or h.other.flag==2) and h.normal.y>0 then
-                self.vy=0
+                v.vy=0
             end
 
             if (h.other.flag==1 or h.other.flag==2) and h.normal.x~=0 and h.normal.y==0 then
                 v.vx=spd*h.normal.x
             end
+        end
+        if v.timer<=0 then
+            v.kill=true
+        end
+    end
+
+    for i=#self.bullets,1,-1 do
+        local b=self.bullets[i]
+        if b.kill then
+            self.parent.world:remove(b)
+            table.remove(self.bullets,i)
         end
     end
 end
