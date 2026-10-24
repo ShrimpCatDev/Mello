@@ -19,8 +19,8 @@ function pl:init(parent,x,y)
     self.y=y
     self.vx=0
     self.vy=0
-    self.w=8
-    self.h=8
+    self.w=6
+    self.h=7
     self.speed=80
     self.jumpHeight=160
     self.dir=1
@@ -64,12 +64,15 @@ function pl:update(dt)
             self.vy=-self.jumpHeight
         end
     end
-
-    
 end
 
 function pl:draw()
-    lg.rectangle("fill",self.x,self.y,self.w,self.h)
+    --lg.rectangle("fill",self.x,self.y,self.w,self.h)
+    local o=0
+    if self.dir==-1 then
+        o=8
+    end
+    sheet:draw(504,pl.x-1+o,pl.y-1,0,self.dir,1)
 end
 
 return pl

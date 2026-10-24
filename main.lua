@@ -16,6 +16,9 @@ function love.load()
 
     assets=require('lib.cargo').init('assets')
 
+    sheet=require('lib.sheet')
+    tileset=sheet:init(assets.maps.tileset,8,8)
+
     local baton=require("lib/baton")
     input=baton.new(conf.input)
 
@@ -28,9 +31,6 @@ function love.load()
     states=require.tree('states')
 
     timer=require('lib.hump.timer')
-
-    sheet=require('lib.sheet')
-    tileset=sheet:init(assets.maps.tileset,8,8)
 
     gs=require('lib.hump.gamestate')
     gs.registerEvents()
