@@ -16,6 +16,8 @@ function level:enter()
     self.map:init()
     self.map:load("levels/level1.json")
     self.map:initBump(self.world)
+
+    self.shadow=lg.newCanvas(conf.gw,conf.gh)
 end
 
 function level:update(dt)
@@ -23,6 +25,14 @@ function level:update(dt)
 end
 
 function level:draw()
+    lg.setCanvas(self.shadow)
+        lg.clear()
+        lg.setColor(1,1,1,1)
+        self.map:draw()
+
+        self.player:draw()
+    lg.setCanvas()
+
     shove.beginDraw()
         shove.beginLayer("terrain")
             local colors={
@@ -38,11 +48,10 @@ function level:draw()
                     lg.rectangle("fill",xx,yy,8,8)
                 end
             end
-
+            lg.setColor(0,0,0,1)
+            lg.draw(self.shadow,1,1)
             lg.setColor(1,1,1,1)
-            self.map:draw()
-
-            self.player:draw()
+            lg.draw(self.shadow)
         shove.endLayer()
     shove.endDraw()
 end
