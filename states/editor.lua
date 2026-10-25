@@ -115,6 +115,11 @@ function exp:draw()
                     self.map:drawTile(v.sprite,v.x,v.y)
                 end
 
+                if self.bar.mode==3 and not self.drag.active then
+                    lg.setColor(1,1,1,0.6)
+                    self.map:drawTile(self.spriteList[self.selectedSprite].sprite,self.mouse.x,self.mouse.y)
+                end
+
                 lg.setColor(1,1,1,1)
 
                 lg.push()
@@ -174,6 +179,18 @@ function exp:keypressed(k)
         end
         if k=="down" then
             self.selectedFlag=self.selectedFlag-1
+        end
+    elseif self.bar.mode==3 then
+        if k=="up" then
+            self.selectedSprite=self.selectedSprite+1
+        end
+        if k=="down" then
+            self.selectedSprite=self.selectedSprite-1
+        end
+        if self.selectedSprite<1 then
+            self.selectedSprite=#self.spriteList
+        elseif self.selectedSprite>#self.spriteList then
+            self.selectedSprite=1
         end
     end
     if k=="escape" then
