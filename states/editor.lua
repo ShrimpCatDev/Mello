@@ -31,8 +31,13 @@ function exp:enter(prev,name)
         mode=1
     }
 
+    self.spriteList={
+        {id="shroom",sprite=468}
+    }
+    self.selectedSprite=1
+
     self.sprites={
-        {id="player",x=8,y=conf.gh-16,sprite=504,w=8,h=8,canRemove=false,kill=false}
+        {id="player",x=8,y=conf.gh-16,sprite=504,w=8,h=8,canRemove=false,kill=false},
     }
     self.drag={
         active=nil,
@@ -178,22 +183,44 @@ end
 
 function exp:mousepressed(x,y,b)
     local inside,mx,my=shove.screenToViewport(x,y)
-    if inside and b==1 then
-        if self.mode=="select" then
-            local xx,yy=math.floor(mx/8),math.floor(my/8)
-            local col=conf.gw/8
-            local sel=yy*col+xx
-            if xx>=0 and xx<col and yy>=0 and sel<#self.map.sheet.quads then
-                self.selectedTile=sel
-                print(sel)
+    if inside then
+        if b==1 then
+            if self.mode=="select" then
+                local xx,yy=math.floor(mx/8),math.floor(my/8)
+                local col=conf.gw/8
+                local sel=yy*col+xx
+                if xx>=0 and xx<col and yy>=0 and sel<#self.map.sheet.quads then
+                    self.selectedTile=sel
+                    print(sel)
+                end
             end
-        end
-        if self.bar.mode==3 then
-            for k,v in ipairs(self.sprites) do
-                if math.collision(v.x,v.y,v.w,v.h,mx,my,1,1) then
-                    self.drag.active=v
-                    self.drag.ox=mx-v.x
-                    self.drag.oy=my-v.y
+            if self.bar.mode==3 then
+                local got=false
+                for k,v in ipairs(self.sprites) do
+                    if math.collision(v.x,v.y,v.w,v.h,mx,my,1,1) then
+                        self.drag.active=v
+                        self.drag.ox=mx-v.x
+                        self.drag.oy=my-v.y
+                        got=true
+                    end
+                end
+                if not got then
+                    local s=self.spriteList[self.selectedSprite]
+                    table.insert(self.sprites,{id=s.id,x=mx,y=my,sprite=s.sprite,w=8,h=8,canRemove=true,kill=false})
+                end
+            end
+        elseif b==2 then
+            if self.bar.mode==3 then
+                for k,v in ipairs(self.sprites) do
+                    if math.collision(v.x,v.y,v.w,v.h,mx,my,1,1) and v.canRemove then
+                        v.kill=true
+                    end
+                end
+                for i=#self.sprites,1,-1 do
+                    local b=self.sprites[i]
+                    if b.kill then
+                        table.remove(self.sprites,i)
+                    end
                 end
             end
         end

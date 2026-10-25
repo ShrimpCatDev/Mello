@@ -95,6 +95,8 @@ function pl:update(dt)
         end
     end
 
+    self.y=math.clamp(self.y,-8,conf.gh)
+
     local spd=80
     if input:pressed("shoot") then
         local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
