@@ -42,7 +42,8 @@ function pl:init(parent,x,y)
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
 
     self.anim={}
-    self.anim.run=anim.new({504,505,506},100,"loop")
+    self.anim.run=anim.new({504,505,506},80,"loop")
+    self.anim.idle=anim.new({503,523},500,"loop")
     self.anim.current=self.anim.run
 
     self.bullets={}
@@ -61,9 +62,13 @@ function pl:update(dt)
     if input:down("right") then
         mx=1
         self.dir=1
+        self.anim.current=self.anim.run
     elseif input:down("left") then
         mx=-1
         self.dir=-1
+        self.anim.current=self.anim.run
+    else
+        self.anim.current=self.anim.idle
     end
     self.vx=self.vx+mx*self.ax*dt
     self.vx=self.vx*(1-math.min(dt*self.friction,1))
