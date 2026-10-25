@@ -2,6 +2,7 @@ lg=love.graphics
 
 
 function love.load()
+    anim=require('lib.anim')
     color=require("lib.hex2color")
     require('lib.require')
     conf=require('config')

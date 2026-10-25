@@ -33,29 +33,41 @@ function pl:init(parent,x,y)
     self.w=6
     self.h=7
     self.speed=70
+
+    self.ax=1000
+    self.friction=8
+
     self.jumpHeight=160
     self.dir=1
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
+
+    self.anim={}
+    self.anim.run=anim.new({504,505,506},100,"loop")
+    self.anim.current=self.anim.run
 
     self.bullets={}
 end
 
 function pl:update(dt)
+    self.anim.current:update(dt)
     --YOINKED from another one of my games :3
     self.jump=false
     self.prevY=self.y
     self.vy=self.vy+self.parent.world.gravity*dt
     self.y=self.y+self.vy*dt
 
+    local mx=0
+
     if input:down("right") then
-        self.vx=self.speed
+        mx=1
         self.dir=1
     elseif input:down("left") then
-        self.vx=-self.speed
+        mx=-1
         self.dir=-1
-    else
-        self.vx=0
     end
+    self.vx=self.vx+mx*self.ax*dt
+    self.vx=self.vx*(1-math.min(dt*self.friction,1))
+    self.vx=math.max(-self.speed,math.min(self.speed,self.vx))
     self.x=self.x+self.vx*dt
 
     local ax,ay,col,len=self.parent.world:move(self,self.x,self.y,filter)
@@ -131,7 +143,7 @@ function pl:draw()
     if self.dir==-1 then
         o=8
     end
-    sheet:draw(504,pl.x-1+o,pl.y-1,0,self.dir,1)
+    sheet:draw(self.anim.current:get(),pl.x-1+o,pl.y-1,0,self.dir,1)
 end
 
 return pl
