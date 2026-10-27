@@ -75,6 +75,8 @@ function pl:update(dt)
     self.vx=math.max(-self.speed,math.min(self.speed,self.vx))
     self.x=self.x+self.vx*dt
 
+    wrap(self)
+
     local ax,ay,col,len=self.parent.world:move(self,self.x,self.y,filter)
     self.x,self.y=ax,ay
 
@@ -98,7 +100,7 @@ function pl:update(dt)
     self.y=math.clamp(self.y,-8,conf.gh)
 
     local spd=80
-    if input:pressed("shoot") then
+    if input:pressed("shoot") and #self.bullets<3 then
         local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
         self.parent.world:add(b,b.x,b.y,b.w,b.h)
         table.insert(self.bullets,b)
@@ -109,6 +111,7 @@ function pl:update(dt)
         v.vy=v.vy+self.parent.world.gravity*dt
         v.y=v.y+v.vy*dt
         v.x=v.x+v.vx*dt
+        wrap(v)
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,bfilter)
         v.x,v.y=ax,ay
 
@@ -134,17 +137,17 @@ function pl:update(dt)
 end
 
 function pl:draw()
-    --lg.rectangle("fill",self.x,self.y,self.w,self.h)
+    dwrap(function()
+        for k,v in ipairs(self.bullets) do
+            sheet:draw(v.s,v.x,v.y)
+        end
 
-    for k,v in ipairs(self.bullets) do
-        sheet:draw(v.s,v.x,v.y)
-    end
-
-    local o=0
-    if self.dir==-1 then
-        o=8
-    end
-    sheet:draw(self.anim.current:get(),pl.x-1+o,pl.y-1,0,self.dir,1)
+        local o=0
+        if self.dir==-1 then
+            o=8
+        end
+        sheet:draw(self.anim.current:get(),pl.x-1+o,pl.y-1,0,self.dir,1)
+    end)
 end
 
 return pl

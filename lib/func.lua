@@ -43,3 +43,24 @@ function killStuff(world,root)
         end
     end
 end
+
+function wrap(item)
+    if item.x>conf.gw-4 then
+        item.x=-4
+    end
+    if item.x<-4 then
+        item.x=conf.gw-4
+    end
+end
+
+function dwrap(func)
+    func()
+    lg.push()
+        lg.translate(conf.gw,0)
+        func()
+    lg.pop()
+    lg.push()
+        lg.translate(-conf.gw,0)
+        func()
+    lg.pop()
+end

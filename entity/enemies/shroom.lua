@@ -24,6 +24,7 @@ function shroom:update(dt)
         v.vy=v.vy+self.parent.world.gravity*dt
         v.x=v.x+v.vx*dt
         v.y=v.y+v.vy*dt
+        wrap(v)
 
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,self.parent.filter)
         v.x,v.y=ax,ay
@@ -61,13 +62,15 @@ function shroom:update(dt)
 end
 
 function shroom:draw()
-    for k,v in pairs(self.items) do
-        local o=0
-        if v.dir==-1 then
-            o=8
+    dwrap(function()
+        for k,v in pairs(self.items) do
+            local o=0
+            if v.dir==-1 then
+                o=8
+            end
+            sheet:draw(v.anim:get(),v.x+o,v.y,0,v.dir,1)
         end
-        sheet:draw(v.anim:get(),v.x+o,v.y,0,v.dir,1)
-    end
+    end)
 end
 
 return shroom
