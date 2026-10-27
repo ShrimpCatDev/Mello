@@ -24,7 +24,7 @@ function shroom:update(dt)
         v.vy=v.vy+self.parent.world.gravity*dt
         v.x=v.x+v.vx*dt
         v.y=v.y+v.vy*dt
-        wrap(v)
+        wrap(v,self.parent.world)
 
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,self.parent.filter)
         v.x,v.y=ax,ay

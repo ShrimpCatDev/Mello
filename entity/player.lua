@@ -75,7 +75,7 @@ function pl:update(dt)
     self.vx=math.max(-self.speed,math.min(self.speed,self.vx))
     self.x=self.x+self.vx*dt
 
-    wrap(self)
+    wrap(self,self.parent.world)
     self.y=math.clamp(self.y,-5,conf.gh+5)
 
     local ax,ay,col,len=self.parent.world:move(self,self.x,self.y,filter)
@@ -112,7 +112,7 @@ function pl:update(dt)
         v.vy=v.vy+self.parent.world.gravity*dt
         v.y=v.y+v.vy*dt
         v.x=v.x+v.vx*dt
-        wrap(v)
+        wrap(v,self.parent.world)
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,bfilter)
         v.x,v.y=ax,ay
 

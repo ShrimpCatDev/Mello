@@ -44,18 +44,19 @@ function killStuff(world,root)
     end
 end
 
-function wrap(item)
+function wrap(item,world)
     if item.x>conf.gw-4 then
         item.x=-4
-    end
-    if item.x<-4 then
+        world:update(item,item.x,item.y)
+    elseif item.x<-4 then
         item.x=conf.gw-4
-    end
-    if item.y>conf.gh-4 then
+        world:update(item,item.x,item.y)
+    elseif item.y>conf.gh-4 then
         item.y=-4
-    end
-    if item.y<-4 then
+        world:update(item,item.x,item.y)
+    elseif item.y<-4 then
         item.y=conf.gh-4
+        world:update(item,item.x,item.y)
     end
 end
 
