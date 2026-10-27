@@ -3,7 +3,7 @@ local shroom={}
 function shroom:init(parent)
     self.parent=parent
     self.items={}
-    self.speed=50
+    self.speed=45
     self.hp=5
 end
 
@@ -55,7 +55,6 @@ function shroom:update(dt)
                 end
             end
         end
-        v.y=math.clamp(v.y,0,conf.gh)
     end
 
     killStuff(self.parent.world,self.items)

@@ -51,6 +51,12 @@ function wrap(item)
     if item.x<-4 then
         item.x=conf.gw-4
     end
+    if item.y>conf.gh-4 then
+        item.y=-4
+    end
+    if item.y<-4 then
+        item.y=conf.gh-4
+    end
 end
 
 function dwrap(func)
@@ -61,6 +67,14 @@ function dwrap(func)
     lg.pop()
     lg.push()
         lg.translate(-conf.gw,0)
+        func()
+    lg.pop()
+    lg.push()
+        lg.translate(0,conf.gh)
+        func()
+    lg.pop()
+    lg.push()
+        lg.translate(0,-conf.gh)
         func()
     lg.pop()
 end
