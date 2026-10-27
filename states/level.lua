@@ -1,5 +1,18 @@
 local level={}
 
+function level.filter(item,other)
+    if other.flag then
+        if other.flag==1 then
+            return "slide"
+        elseif other.flag==2 and item.vy>=0 and other.y>=item.prevY+item.h then
+            return "slide"
+        else
+            return nil
+        end
+    end
+    return "cross"
+end
+
 function level:init()
     shove.createLayer("terrain")
 end
@@ -16,6 +29,11 @@ function level:enter()
     self.map:load("levels/level1.json")
     self.map:initBump(self.world)
 
+    self.enemies=require.tree('entity/enemies')
+    for k,v in pairs(self.enemies) do
+        v:init(self)
+    end
+
     local spawnX,spawnY=8,conf.gh-18
     for _,v in ipairs(self.map.data.sprites or {}) do
         if v.id=="player" then
@@ -24,11 +42,21 @@ function level:enter()
     end
     self.player:init(self,spawnX,spawnY)
 
+    for k,v in ipairs(self.map.data.sprites) do
+        local e=self.enemies[v.id]
+        if e then
+            e:new(v.x,v.y)
+        end
+    end
+
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
 end
 
 function level:update(dt)
     self.player:update(dt)
+    for k,v in pairs(self.enemies) do
+        v:update(dt)
+    end
 end
 
 function level:draw()
@@ -36,6 +64,10 @@ function level:draw()
         lg.clear()
         lg.setColor(1,1,1,1)
         self.map:draw()
+
+        for k,v in pairs(self.enemies) do
+            v:draw()
+        end
 
         self.player:draw()
     lg.setCanvas()

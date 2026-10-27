@@ -42,8 +42,8 @@ function pl:init(parent,x,y)
     self.parent.world:add(self,self.x,self.y,self.w,self.h)
 
     self.anim={}
-    self.anim.run=anim.new({504,505,506},80,"loop")
-    self.anim.idle=anim.new({503,523},500,"loop")
+    self.anim.run=anim.new({504,507,505},80,"loop")
+    self.anim.idle=anim.new({504,524},500,"loop")
     self.anim.current=self.anim.run
 
     self.bullets={}

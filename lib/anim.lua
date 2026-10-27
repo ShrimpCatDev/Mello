@@ -70,7 +70,7 @@ function anim.new(frames,duration,type,endfunc) --if you want to use this do som
         self.ranfunc=false
     end
     a.get=function(self) --use this in your draw call like gfx.spr(myAnim:get(),0,0)
-        return self.frames[self.frame]+1
+        return self.frames[self.frame]
     end
     return a
 end
