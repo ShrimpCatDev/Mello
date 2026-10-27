@@ -36,15 +36,35 @@ function map:initBump(world)
         for col,v in ipairs(i) do
             if v~=0 then
                 local x,y=(col-1)*self.tilewidth,(row-1)*self.tileheight
+                local w=self.tilewidth
+                local h=self.tileheight
+                if row==1 then
+                    y=(row-2)*self.tileheight+self.tileheight
+                    h=self.tileheight*2
+                end
                 local t={
                     x=x,
                     y=y,
-                    w=self.tilewidth,
-                    h=self.tileheight,
+                    w=w,
+                    h=h,
                     flag=v
                 }
                 table.insert(self.cols,t)
                 world:add(t,x,y,self.tilewidth,self.tileheight)
+                if row==1 then
+                    local x,y=(col-1)*self.tilewidth,conf.gh-self.tileheight
+                    local w=self.tilewidth
+                    local h=self.tileheight
+                    local t={
+                        x=x,
+                        y=y,
+                        w=w,
+                        h=h,
+                        flag=v
+                    }
+                    table.insert(self.cols,t)
+                    world:add(t,x,y,self.tilewidth,self.tileheight)
+                end
             end
         end
     end

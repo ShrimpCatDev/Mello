@@ -76,6 +76,7 @@ function pl:update(dt)
     self.x=self.x+self.vx*dt
 
     wrap(self)
+    self.y=math.clamp(self.y,-5,conf.gh+5)
 
     local ax,ay,col,len=self.parent.world:move(self,self.x,self.y,filter)
     self.x,self.y=ax,ay
@@ -97,7 +98,7 @@ function pl:update(dt)
         end
     end
 
-    self.y=math.clamp(self.y,-8,conf.gh)
+    
 
     local spd=80
     if input:pressed("shoot") and #self.bullets<3 then
