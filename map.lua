@@ -14,6 +14,8 @@ function map:init()
     self.quads=sheet:init(assets.maps.tileset,self.tilewidth,self.tileheight)
 
     self:clear()
+    self.ox,self.oy=0,0
+    self.debug=false
 end
 
 function map:load(name)
@@ -46,14 +48,88 @@ function map:initBump(world)
                     flag=v
                 }
                 table.insert(self.cols,t)
-                world:add(t,x,y,self.tilewidth,self.tileheight)
+                world:add(t,x,y,w,h)
+
+                if col==1 then
+                    local x,y=conf.gw,(row-1)*self.tileheight
+                    local w=self.tilewidth
+                    local h=self.tileheight
+                    local t={
+                        x=x,
+                        y=y,
+                        w=w,
+                        h=h,
+                        flag=v
+                    }
+                    table.insert(self.cols,t)
+                    world:add(t,x,y,w,h)
+                elseif col==#i then
+                    local x,y=-8,(row-1)*self.tileheight
+                    local w=self.tilewidth
+                    local h=self.tileheight
+                    local t={
+                        x=x,
+                        y=y,
+                        w=w,
+                        h=h,
+                        flag=v
+                    }
+                    table.insert(self.cols,t)
+                    world:add(t,x,y,w,h)
+                end
+
+                if row==1 then
+                    local x,y=(col-1)*self.tilewidth,conf.gh
+                    local w=self.tilewidth
+                    local h=self.tileheight
+                    local t={
+                        x=x,
+                        y=y,
+                        w=w,
+                        h=h,
+                        flag=v
+                    }
+                    table.insert(self.cols,t)
+                    world:add(t,x,y,w,h)
+                elseif row==#self.data.flags then
+                    local x,y=(col-1)*self.tilewidth,-8
+                    local w=self.tilewidth
+                    local h=self.tileheight
+                    local t={
+                        x=x,
+                        y=y,
+                        w=w,
+                        h=h,
+                        flag=v
+                    }
+                    table.insert(self.cols,t)
+                    world:add(t,x,y,w,h)
+                end
             end
         end
     end
 end
 
-function map:update()
-
+function map:update(dt)
+    if self.debug then
+        local spd=50
+        if love.keyboard.isDown("i") then
+            self.oy=self.oy+spd*dt
+        end
+        if love.keyboard.isDown("k") then
+            self.oy=self.oy-spd*dt
+        end
+        if love.keyboard.isDown("l") then
+            self.ox=self.ox+spd*dt
+        end
+        if love.keyboard.isDown("j") then
+            self.ox=self.ox-spd*dt
+        end
+        if love.keyboard.isDown("o") then
+            self.ox=0
+            self.oy=0
+        end
+    end
 end
 
 function map:draw(ox,oy)
@@ -61,8 +137,15 @@ function map:draw(ox,oy)
     for row,i in ipairs(self.data.tiles) do
         for col,v in ipairs(i) do
             local x,y=(col-1)*self.tilewidth,(row-1)*self.tileheight
-            sheet:draw(v,x+xx,y+yy)
+            sheet:draw(v,x+xx+self.ox,y+yy+self.oy)
         end
+    end
+    if self.debug then
+        lg.setColor(1,1,1,0.5)
+        for k,v in ipairs(self.cols) do
+            lg.rectangle("fill",v.x+self.ox,v.y+self.oy,v.w,v.h)
+        end
+        lg.setColor(1,1,1,1)
     end
 end
 

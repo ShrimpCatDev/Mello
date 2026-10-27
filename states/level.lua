@@ -53,6 +53,7 @@ function level:enter()
 end
 
 function level:update(dt)
+    self.map:update(dt)
     self.player:update(dt)
     for k,v in pairs(self.enemies) do
         v:update(dt)
