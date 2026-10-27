@@ -4,11 +4,12 @@ function shroom:init(parent)
     self.parent=parent
     self.items={}
     self.speed=50
+    self.hp=5
 end
 
 function shroom:new(x,y)
     local rnd={-1,1}
-    local a={dir=rnd[love.math.random(1,2)],x=x,y=y,id="shroom",kind="enemy",w=8,h=8,vx=self.speed,vy=0,prevY=0}
+    local a={dir=rnd[love.math.random(1,2)],x=x,y=y,id="shroom",kind="enemy",w=8,h=8,vx=self.speed,vy=0,prevY=0,kill=false,hp=self.hp}
     a.vx=self.speed*a.dir
     a.anim=anim.new({468,469,470},80,"loop")
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
@@ -44,9 +45,19 @@ function shroom:update(dt)
                 v.vx=self.speed*h.normal.x
                 v.dir=h.normal.x
             end
+
+            if h.other.kind=="pbullet" then
+                h.other.kill=true
+                v.hp=v.hp-1
+                if v.hp<1 then
+                    v.kill=true
+                end
+            end
         end
         v.y=math.clamp(v.y,0,conf.gh)
     end
+
+    killStuff(self.parent.world,self.items)
 end
 
 function shroom:draw()

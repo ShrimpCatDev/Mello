@@ -130,13 +130,7 @@ function pl:update(dt)
         end
     end
 
-    for i=#self.bullets,1,-1 do
-        local b=self.bullets[i]
-        if b.kill then
-            self.parent.world:remove(b)
-            table.remove(self.bullets,i)
-        end
-    end
+    killStuff(self.parent.world,self.bullets)
 end
 
 function pl:draw()

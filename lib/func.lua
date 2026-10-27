@@ -33,3 +33,13 @@ function createMap(w,h)
     end
     return map
 end
+
+function killStuff(world,root)
+    for i=#root,1,-1 do
+        local b=root[i]
+        if b.kill then
+            world:remove(b)
+            table.remove(root,i)
+        end
+    end
+end
