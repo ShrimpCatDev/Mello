@@ -35,6 +35,10 @@ function text:key(k)
             self.text=""
             if self.func then self.func(t) end
         end
+        if k=="escape" then
+            self.open=false
+            self.text=""
+        end
     end
 end 
 
