@@ -18,37 +18,36 @@ function level:init()
     shove.createLayer("ui")
 end
 
-function level:enter()
-    local bump=require('lib.bump')
-    self.world=bump.newWorld(8)
-    self.world.gravity=400
+function level:initLevel(level)
+    --remove stuffs
+    for k,v in pairs(self.world:getItems()) do
+        self.world:remove(v)
+    end
 
-    self.player=require('entity.player')
-
+    --init map
+    local l=level or 1
     self.map=require("map")
     self.map:init()
-    self.map:load("levels/level1.json")
+    self.map:load("levels/level"..l..".json")
     self.map:initBump(self.world)
     self.map.oy=0
 
-    self.spriteCanvas=lg.newCanvas(conf.gw,conf.gh)
-
+    --init enemies
+    self.enemies=nil
     self.enemies=require.tree('entity/enemies')
     self.active=false
     self.drawOpacity=0
     for k,v in pairs(self.enemies) do
         v:init(self)
     end
+    for k,v in ipairs(self.map.data.sprites) do
+        local e=self.enemies[v.id]
+        if e then
+            e:new(v.x,v.y)
+        end
+    end
 
-    self.map.oy=-conf.gh
-    self.drawOpacity=0
-    timer.tween(2,self.map,{oy=0},"in-linear",function()
-        timer.tween(0.2,self,{drawOpacity=1},"out-cubic")
-        timer.after(0.5,function()
-            self.active=true
-        end)
-    end)
-
+    --init player
     local spawnX,spawnY=8,conf.gh-18
     for _,v in ipairs(self.map.data.sprites or {}) do
         if v.id=="player" then
@@ -57,12 +56,27 @@ function level:enter()
     end
     self.player:init(self,spawnX,spawnY)
 
-    for k,v in ipairs(self.map.data.sprites) do
-        local e=self.enemies[v.id]
-        if e then
-            e:new(v.x,v.y)
-        end
-    end
+    --init draw stuff
+    self.map.oy=-conf.gh
+    self.drawOpacity=0
+    timer.tween(2,self.map,{oy=0},"in-linear",function()
+        timer.tween(0.2,self,{drawOpacity=1},"out-cubic")
+        timer.after(0.5,function()
+            self.active=true
+        end)
+    end)
+end
+
+function level:enter()
+    local bump=require('lib.bump')
+    self.world=bump.newWorld(8)
+    self.world.gravity=400
+
+    self.player=require('entity.player')
+
+    self.spriteCanvas=lg.newCanvas(conf.gw,conf.gh)
+
+    self:initLevel(1)
 
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
     self.score=0
