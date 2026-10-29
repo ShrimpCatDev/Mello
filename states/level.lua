@@ -29,21 +29,30 @@ function level:enter()
     self.map:init()
     self.map:load("levels/level1.json")
     self.map:initBump(self.world)
+    self.map.oy=0
+
+    self.spriteCanvas=lg.newCanvas(conf.gw,conf.gh)
 
     self.enemies=require.tree('entity/enemies')
-    self.enemiesActive=false
+    self.active=false
+    self.drawOpacity=0
     for k,v in pairs(self.enemies) do
         v:init(self)
     end
 
-    timer.after(1,function()
-        self.enemiesActive=true
+    self.map.oy=-conf.gh
+    self.drawOpacity=0
+    timer.tween(2,self.map,{oy=0},"in-linear",function()
+        timer.tween(0.2,self,{drawOpacity=1},"out-cubic")
+        timer.after(0.5,function()
+            self.active=true
+        end)
     end)
 
     local spawnX,spawnY=8,conf.gh-18
     for _,v in ipairs(self.map.data.sprites or {}) do
         if v.id=="player" then
-            spawnX,spawnY=v.x+1,v.y
+            spawnX,spawnY=v.x+1,v.y+1
         end
     end
     self.player:init(self,spawnX,spawnY)
@@ -59,35 +68,41 @@ function level:enter()
     self.score=0
 
     self.bar={y=0,w=conf.gw,h=7,dy=0}
+    self.bar.canvas=lg.newCanvas(self.bar.w,self.bar.h)
+    self.bar.opacity=1
+    self.bar.dopacity=self.bar.opacity
 end
 
 function level:update(dt)
     self.map:update(dt)
-    self.player:update(dt)
-    if self.enemiesActive then
+    if self.active then
+        self.player:update(dt)
         for k,v in pairs(self.enemies) do
             v:update(dt)
         end
     end
-    if self.player.y>=conf.gh/4 then
-        self.bar.y=0
+    if self.player.y<=conf.gh/4 then
+        self.bar.opacity=0
     else
-        self.bar.y=-self.bar.h
+        self.bar.opacity=1
     end
-    self.bar.dy=math.lerp(self.bar.dy,self.bar.y,8,dt)
+    self.bar.dopacity=math.lerp(self.bar.dopacity,self.bar.opacity,16,dt)
 end
 
 function level:draw()
+    lg.setCanvas(self.spriteCanvas)
+        lg.clear()
+        for k,v in pairs(self.enemies) do
+            v:draw()
+        end
+        self.player:draw()
     lg.setCanvas(self.shadow)
         lg.clear()
         lg.setColor(1,1,1,1)
         self.map:draw()
 
-        for k,v in pairs(self.enemies) do
-            v:draw()
-        end
-
-        self.player:draw()
+        lg.setColor(1,1,1,self.drawOpacity)
+        lg.draw(self.spriteCanvas)
     lg.setCanvas()
 
     shove.beginDraw()
@@ -111,23 +126,17 @@ function level:draw()
             lg.draw(self.shadow)
         shove.endLayer()
 
-        local d=function()
+        lg.setCanvas(self.bar.canvas)
             lg.setColor(0,0,0,1)
                 lg.rectangle("fill",0,0,self.bar.w,self.bar.h)
             lg.setColor(1,1,1,1)
             lg.print("Score: "..self.score,1,1)
-        end
-        shove.beginLayer("ui")
-            lg.push()
-            lg.translate(0,self.bar.dy)
-                d()
-            lg.pop()
+        lg.setCanvas()
 
-            --[[lg.push()
-            lg.translate(0,self.bar.dy+conf.gh)
-                d()
-            lg.pop()
-        shove.endLayer()]]
+        shove.beginLayer("ui")
+            lg.setColor(1,1,1,self.bar.dopacity)
+            lg.draw(self.bar.canvas)
+        shove.endLayer()
     shove.endDraw()
 end
 
