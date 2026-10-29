@@ -15,6 +15,7 @@ end
 
 function level:init()
     shove.createLayer("terrain")
+    shove.createLayer("ui")
 end
 
 function level:enter()
@@ -50,6 +51,9 @@ function level:enter()
     end
 
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
+    self.score=0
+
+    self.bar={y=0,w=conf.gw,h=7,dy=0}
 end
 
 function level:update(dt)
@@ -58,6 +62,12 @@ function level:update(dt)
     for k,v in pairs(self.enemies) do
         v:update(dt)
     end
+    if self.player.y>=conf.gh/4 then
+        self.bar.y=0
+    else
+        self.bar.y=-self.bar.h
+    end
+    self.bar.dy=math.lerp(self.bar.dy,self.bar.y,8,dt)
 end
 
 function level:draw()
@@ -93,6 +103,24 @@ function level:draw()
             lg.setColor(1,1,1,1)
             lg.draw(self.shadow)
         shove.endLayer()
+
+        local d=function()
+            lg.setColor(0,0,0,1)
+                lg.rectangle("fill",0,0,self.bar.w,self.bar.h)
+            lg.setColor(1,1,1,1)
+            lg.print("Score: "..self.score,1,1)
+        end
+        shove.beginLayer("ui")
+            lg.push()
+            lg.translate(0,self.bar.dy)
+                d()
+            lg.pop()
+
+            --[[lg.push()
+            lg.translate(0,self.bar.dy+conf.gh)
+                d()
+            lg.pop()
+        shove.endLayer()]]
     shove.endDraw()
 end
 

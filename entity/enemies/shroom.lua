@@ -52,6 +52,7 @@ function shroom:update(dt)
                 v.hp=v.hp-1
                 if v.hp<1 then
                     v.kill=true
+                    self.parent.score=self.parent.score+50
                 end
             end
         end

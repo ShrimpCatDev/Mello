@@ -45,6 +45,7 @@ function killStuff(world,root)
 end
 
 function wrap(item,world)
+    item.vy=math.min(item.vy,150)
     if item.x>conf.gw-4 then
         item.x=-4
         world:update(item,item.x,item.y)
