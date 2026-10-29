@@ -31,9 +31,14 @@ function level:enter()
     self.map:initBump(self.world)
 
     self.enemies=require.tree('entity/enemies')
+    self.enemiesActive=false
     for k,v in pairs(self.enemies) do
         v:init(self)
     end
+
+    timer.after(1,function()
+        self.enemiesActive=true
+    end)
 
     local spawnX,spawnY=8,conf.gh-18
     for _,v in ipairs(self.map.data.sprites or {}) do
@@ -59,8 +64,10 @@ end
 function level:update(dt)
     self.map:update(dt)
     self.player:update(dt)
-    for k,v in pairs(self.enemies) do
-        v:update(dt)
+    if self.enemiesActive then
+        for k,v in pairs(self.enemies) do
+            v:update(dt)
+        end
     end
     if self.player.y>=conf.gh/4 then
         self.bar.y=0

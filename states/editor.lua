@@ -38,6 +38,7 @@ function exp:enter(prev,name)
 
     self.sprites={
         {id="player",x=8,y=conf.gh-16,sprite=504,w=8,h=8,canRemove=false,kill=false},
+        {id="spawner",x=16,y=conf.gh-16,sprite=541,w=8,h=8,canRemove=false,kill=false}
     }
     self.drag={
         active=nil,
@@ -148,6 +149,9 @@ function exp:draw()
 end
 
 function exp:keypressed(k)
+    if k=="f" then
+        love.system.openURL("file://"..love.filesystem.getSaveDirectory())
+    end
     if k=="c" then
         self.map:clear()
     end
@@ -196,6 +200,7 @@ function exp:keypressed(k)
     if k=="escape" then
         gs.switch(states.title)
     end
+    
 end
 
 function exp:mousepressed(x,y,b)

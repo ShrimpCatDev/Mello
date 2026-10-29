@@ -19,6 +19,7 @@ function map:init()
 end
 
 function map:load(name)
+    self:clear()
     local data=love.filesystem.read(name)
     if data then
         self.data=json.decode(data)
