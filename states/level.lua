@@ -131,11 +131,11 @@ function level:update(dt)
             v:update(dt)
         end
     end
-    if self.player.y<=conf.gh/4 then
+    --[[if self.player.y<=conf.gh/4 then
         self.bar.opacity=0
     else
         self.bar.opacity=1
-    end
+    end]]
     self.bar.dopacity=math.lerp(self.bar.dopacity,self.bar.opacity,16,dt)
 
     if self:countEntities()<1 and not self.levelDone then

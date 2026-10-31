@@ -12,9 +12,11 @@ end
 
 function shroom:new(x,y)
     local rnd={-1,1}
-    local a={dir=rnd[love.math.random(1,2)],x=x,y=y,id="shroom",kind="enemy",w=8,h=8,vx=self.speed,vy=0,prevY=0,kill=false,hp=self.hp}
+    local a={dir=rnd[love.math.random(1,2)],x=x,y=y,id="shroom",kind="enemy",w=8,h=8,vx=self.speed,vy=0,prevY=0,kill=false,hp=self.hp,gonnaJump=false}
     a.vx=self.speed*a.dir
-    a.anim=anim.new({468,469,470},80,"loop")
+    a.animRun=anim.new({468,469,470},80,"loop")
+    a.animJump=anim.new({471},80,"loop")
+    a.anim=a.animRun
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
 end
@@ -25,7 +27,9 @@ function shroom:update(dt)
         v.jump=false
         v.prevY=v.y
         v.vy=v.vy+self.parent.world.gravity*dt
-        v.x=v.x+v.vx*dt
+        if not v.gonnaJump then
+            v.x=v.x+v.vx*dt
+        end
         v.y=v.y+v.vy*dt
         wrap(v,self.parent.world)
 
@@ -36,8 +40,16 @@ function shroom:update(dt)
             if (h.other.flag==1 or h.other.flag==2) and h.normal.y<0 then
                 v.vy=0
                 v.jump=true
-                if love.math.random(0,100)==50 then
-                    v.vy=-160
+                if not v.gonnaJump then
+                    if love.math.random(0,100)==50 then
+                        v.gonnaJump=true
+                        v.anim=v.animJump
+                        timer.after(0.8,function()
+                            v.vy=-160
+                            v.gonnaJump=false
+                            v.anim=v.animRun
+                        end)
+                    end
                 end
             end
 
