@@ -59,6 +59,10 @@ function shroom:update(dt)
                     self.parent.items:new(v.x,v.y,self.drops)
                 end
             end
+
+            if h.other.kind=="player" then
+                h.other:damage()
+            end
         end
     end
 

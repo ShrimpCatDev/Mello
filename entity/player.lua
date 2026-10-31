@@ -48,6 +48,22 @@ function pl:init(parent,x,y)
 
     self.bullets={}
     self.kind="player"
+    self.hp=1
+    self.maxHp=5
+
+    self.invis=0
+    self.maxInvis=4
+    self.move=true
+    self.canDie=true
+end
+
+function pl:damage(hp)
+    if self.invis<0 and self.canDie then
+        print("ow!")
+        local damage=hp or 1
+        self.invis=self.maxInvis
+        self.hp=self.hp-damage
+    end
 end
 
 function pl:update(dt)
@@ -59,7 +75,8 @@ function pl:update(dt)
     self.y=self.y+self.vy*dt
 
     local mx=0
-
+    self.invis=self.invis-dt
+    
     if input:down("right") then
         mx=1
         self.dir=1
@@ -98,8 +115,6 @@ function pl:update(dt)
             self.vy=-self.jumpHeight
         end
     end
-
-    
 
     local spd=80
     if input:pressed("shoot") and #self.bullets<3 then
@@ -148,7 +163,13 @@ function pl:draw()
         if self.dir==-1 then
             o=8
         end
+        
+        if self.invis>0 then
+            lg.setColor(1,1,1,math.floor((love.timer.getTime()*32)%2)+0.5)
+        end
+
         sheet:draw(self.anim.current:get(),pl.x-1+o,pl.y-1,0,self.dir,1)
+        lg.setColor(1,1,1,1)
     end)
 end
 
