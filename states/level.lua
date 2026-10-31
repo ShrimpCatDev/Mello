@@ -196,7 +196,28 @@ function level:draw()
             lg.setColor(0,0,0,1)
                 lg.rectangle("fill",0,0,self.bar.w,self.bar.h)
             lg.setColor(1,1,1,1)
-            lg.print("Score: "..self.score,1,1)
+
+            lg.setColor(color("#f7f1e4"))
+            local t="Score: "..self.score
+            local font=lg.getFont()
+            lg.print(t,self.bar.w-font:getWidth(t),1)
+
+            local t="HP:"
+            local o=font:getWidth(t)
+            lg.print(t,1,1)
+
+            local w,h=3,self.bar.h-2
+            
+            lg.setColor(color("#5f5666"))
+            for i=0,self.player.maxHp-1 do
+                lg.rectangle("fill",o+(i*(w+1))+1,1,w,h)
+            end
+            lg.setColor(color("#f7f1e4"))
+            for i=0,self.player.hp-1 do
+                lg.rectangle("fill",o+(i*(w+1))+1,1,w,h)
+            end
+        
+            lg.setColor(1,1,1,1)
         lg.setCanvas()
 
         shove.beginLayer("ui")

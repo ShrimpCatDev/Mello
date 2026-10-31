@@ -48,8 +48,12 @@ function pl:init(parent,x,y)
 
     self.bullets={}
     self.kind="player"
-    self.hp=1
-    self.maxHp=5
+
+    if self.parent.first then
+        self.maxHp=5
+        self.hp=self.maxHp
+    end
+    
 
     self.invis=0
     self.maxInvis=4
