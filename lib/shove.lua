@@ -1029,8 +1029,6 @@ local shove = {
     state.currentRenderState.stencilTest = nil
     state.currentRenderState.stencilValue = nil
 
-    shove.profiler.renderOverlay()
-
     return true
   end,
 
@@ -1979,43 +1977,6 @@ do
   end
 
   -- Determine where shove.lua is located
-  local profilerName = "shove-profiler"
-  local shoveDir = ""
-  local pathSep = package.config:sub(1,1)
-  do
-    local info = debug.getinfo(1, "S")
-    if info and info.source and info.source:sub(1, 1) == "@" then
-      local path = info.source:sub(2)
-      -- Use pattern based on OS path separator
-      local pattern = pathSep == "/"
-        and "(.+/)[^/]+%.lua$"
-        or "(.+\\)[^\\]+%.lua$"
-      shoveDir = path:match(pattern) or ""
-    end
-  end
-
-  -- Build path with correct separator
-  local profilerPath = shoveDir .. profilerName
-  local requirePath = profilerPath:gsub(pathSep, ".")
-
-  -- Load profiler module or create a stub module
-  local success, shoveProfiler = pcall(require, requirePath)
-  if not success then
-    print("shove: Profiler module failed to load from: ", shoveProfiler)
-    success, shoveProfiler = pcall(require, profilerName)
-  end
-  if success then
-    shove.profiler = shoveProfiler
-    shove.profiler.init(shove)
-    print("shove: Profiler module loaded")
-  else
-    print("shove: Profiler module not found, using stub module")
-    shove.profiler = {
-      renderOverlay = function() end,
-      registerParticleSystem = function() end,
-      unregisterParticleSystem = function() end
-    }
-  end
 end
 
 return shove

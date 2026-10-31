@@ -19,6 +19,14 @@ function level:init()
 end
 
 function level:initLevel(level)
+    --draw previous level to canvas if need be
+    if not self.first then
+        lg.setCanvas(self.levelCanvas)
+            lg.clear()
+            self.map:draw()
+        lg.setCanvas()
+    end
+
     --remove stuffs
     for k,v in pairs(self.world:getItems()) do
         self.world:remove(v)
@@ -65,6 +73,9 @@ function level:initLevel(level)
             self.active=true
         end)
     end)
+
+    self.first=false
+    self.levelDone=false
 end
 
 function level:enter()
@@ -75,7 +86,11 @@ function level:enter()
     self.player=require('entity.player')
 
     self.spriteCanvas=lg.newCanvas(conf.gw,conf.gh)
+    self.levelCanvas=lg.newCanvas(conf.gw,conf.gh)
 
+    self.first=true
+    self.levelDone=false
+    self.level=1
     self:initLevel(1)
 
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
@@ -85,6 +100,17 @@ function level:enter()
     self.bar.canvas=lg.newCanvas(self.bar.w,self.bar.h)
     self.bar.opacity=1
     self.bar.dopacity=self.bar.opacity
+end
+
+function level:countEntities()
+    local num=0
+    for k,v in pairs(self.enemies) do
+        for l,j in pairs(v.items) do
+            num=num+1
+        end
+    end
+
+    return num
 end
 
 function level:update(dt)
@@ -101,6 +127,20 @@ function level:update(dt)
         self.bar.opacity=1
     end
     self.bar.dopacity=math.lerp(self.bar.dopacity,self.bar.opacity,16,dt)
+
+    if self:countEntities()<1 and not self.levelDone then
+        self.levelDone=true
+        self.level=self.level+1
+        if not love.filesystem.read("levels/level"..self.level..".json") then
+            self.level=1
+        end
+
+        timer.after(0.5,function()
+            self:initLevel(self.level)
+        end)
+        print("done!")
+    end
+    
 end
 
 function level:draw()
@@ -114,6 +154,7 @@ function level:draw()
         lg.clear()
         lg.setColor(1,1,1,1)
         self.map:draw()
+        lg.draw(self.levelCanvas,0,self.map.oy+conf.gh)
 
         lg.setColor(1,1,1,self.drawOpacity)
         lg.draw(self.spriteCanvas)
@@ -157,6 +198,13 @@ end
 function level:keypressed(k)
     if k=="escape" then
         gs.switch(states.title)
+    end
+    if k=="k" then
+        for k,v in pairs(self.enemies) do
+            for l,j in pairs(v.items) do
+                j.kill=true
+            end
+        end
     end
 end
 
