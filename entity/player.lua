@@ -47,6 +47,7 @@ function pl:init(parent,x,y)
     self.anim.current=self.anim.run
 
     self.bullets={}
+    self.kind="player"
 end
 
 function pl:update(dt)

@@ -1,4 +1,5 @@
 lg=love.graphics
+if not unpack then unpack=table.unpack end
 
 
 function love.load()

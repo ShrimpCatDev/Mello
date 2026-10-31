@@ -5,6 +5,9 @@ function shroom:init(parent)
     self.items={}
     self.speed=45
     self.hp=5
+    self.drops={
+        "cherry","pie","pear"
+    }
 end
 
 function shroom:new(x,y)
@@ -53,6 +56,7 @@ function shroom:update(dt)
                 if v.hp<1 then
                     v.kill=true
                     self.parent.score=self.parent.score+50
+                    self.parent.items:new(v.x,v.y,self.drops)
                 end
             end
         end

@@ -40,6 +40,11 @@ function level:initLevel(level)
     self.map:initBump(self.world)
     self.map.oy=0
 
+    --init food
+    self.items=nil
+    self.items=require("entity.items")
+    self.items:init(self)
+
     --init enemies
     self.enemies=nil
     self.enemies=require.tree('entity/enemies')
@@ -110,12 +115,17 @@ function level:countEntities()
         end
     end
 
+    for k,v in pairs(self.items.items) do
+        num=num+1
+    end
+
     return num
 end
 
 function level:update(dt)
     self.map:update(dt)
     if self.active then
+        self.items:update(dt)
         self.player:update(dt)
         for k,v in pairs(self.enemies) do
             v:update(dt)
@@ -149,6 +159,7 @@ function level:draw()
         for k,v in pairs(self.enemies) do
             v:draw()
         end
+        self.items:draw()
         self.player:draw()
     lg.setCanvas(self.shadow)
         lg.clear()
