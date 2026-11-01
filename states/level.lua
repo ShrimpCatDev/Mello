@@ -72,7 +72,7 @@ function level:initLevel(level)
     --init draw stuff
     self.map.oy=-conf.gh
     self.drawOpacity=0
-    timer.tween(2,self.map,{oy=0},"in-linear",function()
+    timer.tween(1.5,self.map,{oy=0},"in-out-back",function()
         timer.tween(0.2,self,{drawOpacity=1},"out-cubic")
         timer.after(0.5,function()
             self.active=true

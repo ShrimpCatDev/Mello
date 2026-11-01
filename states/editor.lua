@@ -32,7 +32,8 @@ function exp:enter(prev,name)
     }
 
     self.spriteList={
-        {id="shroom",sprite=468}
+        {id="shroom",sprite=468},
+        {id="temp",sprite=542}
     }
     self.selectedSprite=1
 
