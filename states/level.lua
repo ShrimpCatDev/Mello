@@ -83,7 +83,7 @@ function level:initLevel(level)
     self.levelDone=false
 end
 
-function level:enter()
+function level:enter(prev,bootLevel)
     local bump=require('lib.bump')
     self.world=bump.newWorld(8)
     self.world.gravity=400
@@ -96,7 +96,7 @@ function level:enter()
     self.first=true
     self.levelDone=false
     self.level=1
-    self:initLevel(1)
+    self:initLevel(bootLevel or 1)
 
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
     self.score=0
