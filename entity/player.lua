@@ -44,6 +44,7 @@ function pl:init(parent,x,y)
     self.anim={}
     self.anim.run=anim.new({504,507,505},80,"loop")
     self.anim.idle=anim.new({504,524},500,"loop")
+    self.anim.die=anim.new({508,509,510,511,508,509,510,511,508,509,510,511,525,525,526},60,"noloop",function() end)
     self.anim.current=self.anim.run
 
     self.bullets={}
@@ -172,7 +173,8 @@ function pl:draw()
             o=8
         end
         
-        if self.invis>0 then
+        lg.setColor(1,1,1,1)
+        if self.invis>0 and self.parent.active then
             lg.setColor(1,1,1,math.floor((love.timer.getTime()*32)%2)+0.5)
         end
 

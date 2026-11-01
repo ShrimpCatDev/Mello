@@ -84,7 +84,17 @@ function level:initLevel(level)
 end
 
 function level:gameOver()
-    gs.switch(states.gameover,self.level,self.score)
+    self.active=false
+    self.over=true
+
+    timer.script(function(wait)
+        timer.tween(0.5,self.fade,{opacity=1},"in-cubic")
+        wait(0.2)
+        timer.tween(0.8,self.player,{x=conf.gw/2-self.player.w/2,y=conf.gh/2-self.player.h/2},"out-cubic",function()
+            self.player.anim.current=self.player.anim.die
+        end)
+    end)
+    --gs.switch(states.gameover,self.level,self.score)
 end
 
 function level:enter(prev,bootLevel)
@@ -109,6 +119,9 @@ function level:enter(prev,bootLevel)
     self.bar.canvas=lg.newCanvas(self.bar.w,self.bar.h)
     self.bar.opacity=1
     self.bar.dopacity=self.bar.opacity
+
+    self.fade={opacity=0}
+    self.over=false
 end
 
 function level:countEntities()
@@ -134,27 +147,28 @@ function level:update(dt)
         for k,v in pairs(self.enemies) do
             v:update(dt)
         end
+
+        if self:countEntities()<1 and not self.levelDone then
+            self.levelDone=true
+            self.level=self.level+1
+            if not love.filesystem.read("levels/level"..self.level..".json") then
+                self.level=1
+            end
+
+            timer.after(0.5,function()
+                self:initLevel(self.level)
+            end)
+            print("done!")
+        end
+    elseif self.over then
+        self.player.anim.current:update(dt)
     end
     --[[if self.player.y<=conf.gh/4 then
         self.bar.opacity=0
     else
         self.bar.opacity=1
     end]]
-    self.bar.dopacity=math.lerp(self.bar.dopacity,self.bar.opacity,16,dt)
-
-    if self:countEntities()<1 and not self.levelDone then
-        self.levelDone=true
-        self.level=self.level+1
-        if not love.filesystem.read("levels/level"..self.level..".json") then
-            self.level=1
-        end
-
-        timer.after(0.5,function()
-            self:initLevel(self.level)
-        end)
-        print("done!")
-    end
-    
+    --self.bar.dopacity=math.lerp(self.bar.dopacity,self.bar.opacity,16,dt)
 end
 
 function level:draw()
@@ -227,6 +241,14 @@ function level:draw()
         shove.beginLayer("ui")
             lg.setColor(1,1,1,self.bar.dopacity)
             lg.draw(self.bar.canvas)
+
+            lg.setColor(0,0,0,self.fade.opacity)
+            lg.rectangle("fill",0,0,conf.gw,conf.gh)
+            lg.setColor(1,1,1,1)
+
+            if self.over then
+                self.player:draw()
+            end
         shove.endLayer()
     shove.endDraw()
 end
@@ -235,15 +257,18 @@ function level:keypressed(k)
     if k=="escape" then
         gs.switch(states.title)
     end
-    if k=="k" then
-        for k,v in pairs(self.enemies) do
-            for l,j in pairs(v.items) do
-                j.kill=true
+
+    if conf.debug then
+        if k=="k" then
+            for k,v in pairs(self.enemies) do
+                for l,j in pairs(v.items) do
+                    j.kill=true
+                end
             end
         end
-    end
-    if k=="p" then
-        self.player:damage(10000)
+        if k=="p" then
+            self.player:damage(10000)
+        end
     end
 end
 
