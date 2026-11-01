@@ -83,6 +83,10 @@ function level:initLevel(level)
     self.levelDone=false
 end
 
+function level:gameOver()
+    gs.switch(states.gameover,self.level,self.score)
+end
+
 function level:enter(prev,bootLevel)
     local bump=require('lib.bump')
     self.world=bump.newWorld(8)
@@ -95,8 +99,8 @@ function level:enter(prev,bootLevel)
 
     self.first=true
     self.levelDone=false
-    self.level=1
-    self:initLevel(bootLevel or 1)
+    self.level=bootLevel or 1
+    self:initLevel(self.level)
 
     self.shadow=lg.newCanvas(conf.gw,conf.gh)
     self.score=0
@@ -237,6 +241,9 @@ function level:keypressed(k)
                 j.kill=true
             end
         end
+    end
+    if k=="p" then
+        self.player:damage(10000)
     end
 end
 

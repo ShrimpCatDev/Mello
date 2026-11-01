@@ -67,6 +67,10 @@ function pl:damage(hp)
         local damage=hp or 1
         self.invis=self.maxInvis
         self.hp=self.hp-damage
+
+        if self.hp<1 then
+            self.parent:gameOver()
+        end
     end
 end
 
