@@ -93,6 +93,8 @@ function level:gameOver()
         timer.tween(0.8,self.player,{x=conf.gw/2-self.player.w/2,y=conf.gh/2-self.player.h/2},"out-cubic",function()
             self.player.anim.current=self.player.anim.die
         end)
+        wait(2)
+        self.deadAnimDone=true
     end)
     --gs.switch(states.gameover,self.level,self.score)
 end
@@ -122,6 +124,7 @@ function level:enter(prev,bootLevel)
 
     self.fade={opacity=0}
     self.over=false
+    self.deadAnimDone=false
 end
 
 function level:countEntities()
@@ -162,6 +165,14 @@ function level:update(dt)
         end
     elseif self.over then
         self.player.anim.current:update(dt)
+        if self.deadAnimDone then
+            if input:pressed("jump") then
+                gs.switch(states.level,self.level)
+            end
+            if input:pressed("shoot") then
+                gs.switch(states.title)
+            end
+        end
     end
     --[[if self.player.y<=conf.gh/4 then
         self.bar.opacity=0
@@ -248,6 +259,22 @@ function level:draw()
 
             if self.over then
                 self.player:draw()
+                if self.deadAnimDone then
+                    lg.setColor(1,1,1,1)
+                    local f=lg.getFont()
+                    
+                    lg.setColor(color("#f7f1e4"))
+                    local t="Game Over"
+                    lg.print(t,conf.gw/2-f:getWidth(t)/2,self.player.y-f:getHeight()-3)
+
+                    lg.setColor(color("#b5a9a3"))
+                    local t="Score: "..self.score
+                    lg.print(t,conf.gw/2-f:getWidth(t)/2,self.player.y+self.player.h+2)
+
+                    lg.setColor(color("#5f5666"))
+                    local t="Press Z to continue/X to quit"
+                    lg.print(t,conf.gw/2-f:getWidth(t)/2,conf.gh-f:getHeight())
+                end
             end
         shove.endLayer()
     shove.endDraw()

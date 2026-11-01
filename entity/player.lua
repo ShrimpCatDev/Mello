@@ -164,8 +164,10 @@ end
 
 function pl:draw()
     dwrap(function()
-        for k,v in ipairs(self.bullets) do
-            sheet:draw(v.s,v.x,v.y)
+        if not self.parent.over then
+            for k,v in ipairs(self.bullets) do
+                sheet:draw(v.s,v.x,v.y)
+            end
         end
 
         local o=0
