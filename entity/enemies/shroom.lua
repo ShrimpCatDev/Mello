@@ -70,7 +70,7 @@ function shroom:update(dt)
             if h.other.kind=="pbullet" then
                 h.other.kill=true
                 v.hp=v.hp-1
-                if v.hp<1 then
+                if v.hp<1 and not v.kill then
                     v.kill=true
                     self.parent.score=self.parent.score+50
                     self.parent.items:new(v.x,v.y,self.drops)
