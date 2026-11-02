@@ -6,21 +6,24 @@ function title:init()
         560,561,562,563,564
     }
     self.menu={
-        items={"Start","Level Editor"},
+        items={"Start"},
         funcs={
             function(s)
                 gs.switch(states.level)
-            end,
-            function(s)
-                self.textInput:spawn(function(output)
-                    gs.switch(states.editor,output)
-                end)
             end
         },
         x=conf.gw/2,
         y=conf.gh/2,
-        sel=2
+        sel=1
     }
+    if conf.debug then
+        table.insert(self.menu.items,"Level Editor")
+        table.insert(self.menu.funcs,function(s)
+            self.textInput:spawn(function(output)
+                gs.switch(states.editor,output)
+            end)
+        end)
+    end
     self.textInput=require('utils.textInput')
     self.textInput:init()
 end
@@ -69,6 +72,12 @@ function title:draw()
             end
             lg.setColor(1,1,1,1)
             self.textInput:draw()
+
+            local s=version
+            lg.print(s,conf.gw-lg.getFont():getWidth(s)-1,conf.gh-lg.getFont():getHeight(s)-1)
+
+            local s="ShrimpCat"
+            lg.print(s,1,conf.gh-lg.getFont():getHeight(s)-1)
         shove.endLayer()
     shove.endDraw()
 end

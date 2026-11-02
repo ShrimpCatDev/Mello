@@ -45,6 +45,9 @@ function shroom:update(dt)
                         v.gonnaJump=true
                         v.anim=v.animJump
                         timer.after(0.8,function()
+                            local s=assets.sfx.jumpSmall:clone()
+                            s:setPitch(love.math.random(100,110)/100)
+                            s:play()
                             v.vy=-160
                             v.gonnaJump=false
                             v.anim=v.animRun

@@ -119,10 +119,9 @@ function pl:update(dt)
         end
     end
 
-    if self.jump then
-        if input:pressed("jump") then
-            self.vy=-self.jumpHeight
-        end
+    if self.jump and input:pressed("jump") then
+        self.vy=-self.jumpHeight
+        assets.sfx.jump:play()
     end
 
     local spd=80
@@ -130,6 +129,10 @@ function pl:update(dt)
         local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
         self.parent.world:add(b,b.x,b.y,b.w,b.h)
         table.insert(self.bullets,b)
+
+        local s=assets.sfx.shoot:clone()
+        s:setPitch(love.math.random(80,120)/100)
+        s:play()
     end
 
     for k,v in ipairs(self.bullets) do

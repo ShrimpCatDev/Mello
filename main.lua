@@ -3,6 +3,7 @@ if not unpack then unpack=table.unpack end
 
 
 function love.load()
+    version="v0.1a"
     anim=require('lib.anim')
     color=require("lib.hex2color")
     require('lib.require')

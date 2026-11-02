@@ -287,11 +287,10 @@ function level:draw()
 end
 
 function level:keypressed(k)
-    if k=="escape" then
-        gs.switch(states.title)
-    end
-
     if conf.debug then
+        if k=="escape" then
+            gs.switch(states.title)
+        end
         if k=="k" then
             for k,v in pairs(self.enemies) do
                 for l,j in pairs(v.items) do
@@ -303,6 +302,10 @@ function level:keypressed(k)
             self.player:damage(10000)
         end
     end
+end
+
+function level:leave()
+    love.audio.stop()
 end
 
 return level
