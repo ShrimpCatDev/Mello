@@ -263,6 +263,11 @@ function level:draw()
             lg.rectangle("fill",0,0,conf.gw,conf.gh)
             lg.setColor(1,1,1,1)
 
+            if conf.debug then
+                lg.setColor(1,1,1,1)
+                lg.print(love.timer.getFPS(),1,9)
+            end
+
             if self.over then
                 self.player:draw()
                 if self.deadAnimDone then

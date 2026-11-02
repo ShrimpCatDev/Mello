@@ -13,8 +13,8 @@ function sheet:init(img,w,h)
     end
 end
 
-function sheet:draw(i,...)
-    love.graphics.draw(self.img,self.quads[i+1],...)
+function sheet:draw(i,x,y,...)
+    love.graphics.draw(self.img,self.quads[i+1],math.floor(x+0.5),math.floor(y+0.5),...)
 end
 
 return sheet
