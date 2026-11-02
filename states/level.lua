@@ -136,6 +136,7 @@ function level:enter(prev,bootLevel)
     self.fade:init()
 
     self.fade:fade(0.3,1,0,"#000000")
+    self.paused=false
 end
 
 function level:countEntities()
@@ -155,7 +156,7 @@ end
 
 function level:update(dt)
     self.map:update(dt)
-    if self.active then
+    if self.active and not self.paused then
         self.items:update(dt)
         self.player:update(dt)
         for k,v in pairs(self.enemies) do
@@ -188,6 +189,16 @@ function level:update(dt)
                     gs.switch(states.title)
                 end)
             end
+        end
+    end
+
+    if input:pressed("pause") and self.active then
+        self.paused=not self.paused
+
+        if self.paused then
+            self.music:pause()
+        else
+            self.music:play()
         end
     end
     --[[if self.player.y<=conf.gh/4 then
@@ -272,6 +283,15 @@ function level:draw()
             lg.setColor(0,0,0,self.fadeDeath.opacity)
             lg.rectangle("fill",0,0,conf.gw,conf.gh)
             lg.setColor(1,1,1,1)
+
+            if self.paused then
+                lg.setColor(0,0,0,0.5)
+                lg.rectangle("fill",0,0,conf.gw,conf.gh)
+                lg.setColor(color("#f7f1e4"))
+                local t="Paused"
+                local font=lg.getFont()
+                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2)
+            end
 
             if conf.debug then
                 lg.setColor(1,1,1,1)
