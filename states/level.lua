@@ -232,7 +232,8 @@ function level:draw()
         self.map:draw()
         lg.draw(self.levelCanvas,0,self.map.oy+conf.gh)
 
-        lg.setColor(1,1,1,self.drawOpacity)
+        local o=math.floor(self.drawOpacity*4+0.5)/4
+        lg.setColor(1,1,1,o)
         lg.draw(self.spriteCanvas)
         self.particles.draw()
     lg.setCanvas()
@@ -302,7 +303,8 @@ function level:draw()
             lg.setColor(1,1,1,self.bar.dopacity)
             lg.draw(self.bar.canvas)
 
-            lg.setColor(0,0,0,self.fadeDeath.opacity)
+            local o=math.floor(self.fadeDeath.opacity*4+0.5)/4
+            lg.setColor(0,0,0,o)
             lg.rectangle("fill",0,0,conf.gw,conf.gh)
             lg.setColor(1,1,1,1)
 

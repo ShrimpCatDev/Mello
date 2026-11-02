@@ -17,7 +17,9 @@ function fade:fade(speed,oldOpacity,opacity,color,endfunc)
 end
 
 function fade:draw()
-    lg.setColor(color(self.color,self.opacity))
+    local o=math.floor(self.opacity*4+0.5)/4
+    print(o)
+    lg.setColor(color(self.color,o))
     lg.rectangle("fill",0,0,conf.gw,conf.gh)
     lg.setColor(1,1,1,1)
 end
