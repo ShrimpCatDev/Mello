@@ -137,6 +137,9 @@ function level:enter(prev,bootLevel)
 
     self.fade:fade(0.3,1,0,"#000000")
     self.paused=false
+
+    self.particles=require('entity.particles')
+    self.particles.clear()
 end
 
 function level:countEntities()
@@ -162,6 +165,7 @@ function level:update(dt)
         for k,v in pairs(self.enemies) do
             v:update(dt)
         end
+        self.particles.update(dt)
 
         if self:countEntities()<1 and not self.levelDone then
             self.levelDone=true
@@ -229,6 +233,7 @@ function level:draw()
 
         lg.setColor(1,1,1,self.drawOpacity)
         lg.draw(self.spriteCanvas)
+        self.particles.draw()
     lg.setCanvas()
 
     shove.beginDraw()
