@@ -9,7 +9,9 @@ function title:init()
         items={"Start"},
         funcs={
             function(s)
-                gs.switch(states.level)
+                self.fade:fade(0.4,0,1,"#000000",function()
+                    gs.switch(states.level)
+                end)
             end
         },
         x=conf.gw/2,
@@ -26,10 +28,12 @@ function title:init()
     end
     self.textInput=require('utils.textInput')
     self.textInput:init()
+    self.fade=require('utils.fade')
+    self.fade:init()
 end
 
 function title:enter()
-    
+    self.fade:fade(0.3,1,0,"#000000")
 end
 
 function title:update(dt)
@@ -78,6 +82,8 @@ function title:draw()
 
             local s="ShrimpCat"
             lg.print(s,1,conf.gh-lg.getFont():getHeight(s)-1)
+
+            self.fade:draw()
         shove.endLayer()
     shove.endDraw()
 end

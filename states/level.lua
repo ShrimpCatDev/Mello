@@ -89,7 +89,7 @@ function level:gameOver()
 
     timer.script(function(wait)
         self.music:stop()
-        timer.tween(0.5,self.fade,{opacity=1},"in-cubic")
+        timer.tween(0.5,self.fadeDeath,{opacity=1},"in-cubic")
         wait(0.2)
         timer.tween(0.8,self.player,{x=conf.gw/2-self.player.w/2,y=conf.gh/2-self.player.h/2},"out-cubic",function()
             self.player.anim.current=self.player.anim.die
@@ -124,13 +124,18 @@ function level:enter(prev,bootLevel)
     self.bar.opacity=1
     self.bar.dopacity=self.bar.opacity
 
-    self.fade={opacity=0}
+    self.fadeDeath={opacity=0}
     self.over=false
     self.deadAnimDone=false
     self.music=assets.music.level
     self.music:setLooping(true)
     self.music:stop()
     self.music:play()
+
+    self.fade=require('utils.fade')
+    self.fade:init()
+
+    self.fade:fade(0.3,1,0,"#000000")
 end
 
 function level:countEntities()
@@ -173,10 +178,15 @@ function level:update(dt)
         self.player.anim.current:update(dt)
         if self.deadAnimDone then
             if input:pressed("jump") then
-                gs.switch(states.level,self.level)
+                self.fade:fade(0.4,0,1,"#000000",function()
+                    self.deadAnimDone=false
+                    gs.switch(states.level,self.level)
+                end)
             end
             if input:pressed("shoot") then
-                gs.switch(states.title)
+                self.fade:fade(0.4,0,1,"#000000",function()
+                    gs.switch(states.title)
+                end)
             end
         end
     end
@@ -259,7 +269,7 @@ function level:draw()
             lg.setColor(1,1,1,self.bar.dopacity)
             lg.draw(self.bar.canvas)
 
-            lg.setColor(0,0,0,self.fade.opacity)
+            lg.setColor(0,0,0,self.fadeDeath.opacity)
             lg.rectangle("fill",0,0,conf.gw,conf.gh)
             lg.setColor(1,1,1,1)
 
@@ -287,6 +297,7 @@ function level:draw()
                     lg.print(t,conf.gw/2-f:getWidth(t)/2,conf.gh-f:getHeight())
                 end
             end
+            self.fade:draw()
         shove.endLayer()
     shove.endDraw()
 end
