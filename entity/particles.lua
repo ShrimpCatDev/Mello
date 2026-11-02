@@ -2,7 +2,7 @@
 local part={ps={}}
 
 function part.new(x,y,vx,vy,ax,ay,lt,df,kf,data)
-    table.insert(part.ps,{x=x,y=y,vx=vx,vy=vy,ax=ax,ay=ay,df=df,lt=lt,kf=kf,data=data})
+    table.insert(part.ps,{x=x,y=y,vx=vx,vy=vy,ax=ax,ay=ay,df=df,lt=lt,kf=kf,data=data,time=0})
 end
 
 function part.update(dt)
@@ -13,6 +13,8 @@ function part.update(dt)
         p.x=p.x+(p.vx*dt)
         p.y=p.y+(p.vy*dt)
         p.lt=p.lt-dt
+        p.time=p.time+dt
+        if p.data.update then p.data:update() end
         if p.lt<0 then
             table.insert(dels,k)
             if p.kf then p.kf() end
@@ -26,7 +28,7 @@ end
 function part.draw()
     dwrap(function()
         for k,p in ipairs(part.ps) do
-            p.df(p.x,p.y,p.lt,p.data)
+            p.df(p.x,p.y,p.lt,p.time,p.data)
         end
     end)
 end

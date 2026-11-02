@@ -52,7 +52,7 @@ function items:update(dt)
                     v.y+v.h/2,
                     0,-20,0,0,
                     1,
-                    function(x,y,lt,data)
+                    function(x,y,lt,time,data)
                         local t=self.foods[v.id].points
                         lg.setColor(color("#f7f1e4",math.floor((love.timer.getTime()*16)%2)+0.5))
                         local f=lg.getFont()
