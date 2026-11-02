@@ -348,9 +348,6 @@ end
 
 function level:keypressed(k)
     if conf.debug then
-        if k=="escape" then
-            gs.switch(states.title)
-        end
         if k=="k" then
             for k,v in pairs(self.enemies) do
                 for l,j in pairs(v.items) do

@@ -4,7 +4,7 @@ function shroom:init(parent)
     self.parent=parent
     self.items={}
     self.speed=45
-    self.hp=5
+    self.hp=3
     self.drops={
         "cherry","pie","pear"
     }
