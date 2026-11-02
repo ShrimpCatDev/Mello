@@ -210,15 +210,10 @@ function level:update(dt)
             end)
         end
     end
-    --[[if self.player.y<=conf.gh/4 then
-        self.bar.opacity=0
-    else
-        self.bar.opacity=1
-    end]]
-    --self.bar.dopacity=math.lerp(self.bar.dopacity,self.bar.opacity,16,dt)
 end
 
 function level:draw()
+    --drawing the sprites canvas to draw to the shadow canvas to draw to the terrain layer to draw to the screen TwT
     lg.setCanvas(self.spriteCanvas)
         lg.clear()
         for k,v in pairs(self.enemies) do
@@ -238,11 +233,13 @@ function level:draw()
 
     shove.beginDraw()
         shove.beginLayer("terrain")
+            --colors for the bg
             local colors={
                 {0.05,0.05,0.1},
                 {0.1,0.1,0.15}
             }
 
+            --cool scrolling background checkerboard yes
             for y=-1,(conf.gh/8) do
                 for x=-1,(conf.gw/8) do
                     lg.setColor(colors[(x+y)%2+1])
@@ -251,6 +248,8 @@ function level:draw()
                     lg.rectangle("fill",xx,yy,8,8)
                 end
             end
+
+            --shadow for the map and sprites
             lg.setColor(0,0,0,1)
             lg.draw(self.shadow,1,1)
             lg.setColor(1,1,1,1)
@@ -258,25 +257,31 @@ function level:draw()
         shove.endLayer()
 
         lg.setCanvas(self.bar.canvas)
+            --le bar
             lg.setColor(0,0,0,1)
                 lg.rectangle("fill",0,0,self.bar.w,self.bar.h)
             lg.setColor(1,1,1,1)
 
+            --score stats
             lg.setColor(color("#f7f1e4"))
             local t="Score: "..self.score
             local font=lg.getFont()
             lg.print(t,self.bar.w-font:getWidth(t),1)
 
+            --hp bar
             local t="HP:"
             local o=font:getWidth(t)
             lg.print(t,1,1)
 
             local w,h=3,self.bar.h-2
             
+            --empty bar part
             lg.setColor(color("#5f5666"))
             for i=0,self.player.maxHp-1 do
                 lg.rectangle("fill",o+(i*(w+1))+1,1,w,h)
             end
+
+            --full bar part
             lg.setColor(color("#f7f1e4"))
             for i=0,self.player.hp-1 do
                 lg.rectangle("fill",o+(i*(w+1))+1,1,w,h)
@@ -284,8 +289,10 @@ function level:draw()
         
             lg.setColor(1,1,1,1)
         lg.setCanvas()
-
+        
+        --ui layer
         shove.beginLayer("ui")
+            --ngl i forgot what this was for
             lg.setColor(1,1,1,self.bar.dopacity)
             lg.draw(self.bar.canvas)
 
@@ -293,6 +300,7 @@ function level:draw()
             lg.rectangle("fill",0,0,conf.gw,conf.gh)
             lg.setColor(1,1,1,1)
 
+            --pause screen
             if self.paused then
                 lg.setColor(0,0,0,0.5)
                 lg.rectangle("fill",0,0,conf.gw,conf.gh)
@@ -305,11 +313,13 @@ function level:draw()
                 lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2+4)
             end
 
+            --debug fps, ignore :3
             if conf.debug then
                 lg.setColor(1,1,1,1)
                 lg.print(love.timer.getFPS(),1,9)
             end
 
+            --Game over stuff
             if self.over then
                 self.player:draw()
                 if self.deadAnimDone then
@@ -329,6 +339,8 @@ function level:draw()
                     lg.print(t,conf.gw/2-f:getWidth(t)/2,conf.gh-f:getHeight())
                 end
             end
+
+            --the cool fade lol hi lol
             self.fade:draw()
         shove.endLayer()
     shove.endDraw()

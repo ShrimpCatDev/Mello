@@ -1,15 +1,23 @@
-lg=love.graphics
-if not unpack then unpack=table.unpack end
+--[[
+    For Those Reading My Code:
+    I was sick while working on this so WHO KNOWS what unholy spaghetti code i wrote
+    Look at your own risk, ill try to clean things up later fs fs fs
+]]
 
+lg=love.graphics
+if not unpack then unpack=table.unpack end --for lua 5.2 users lol
 
 function love.load()
     version="v0.1a"
-    anim=require('lib.anim')
-    color=require("lib.hex2color")
+
     require('lib.require')
+    json=require('lib.json')
+
     conf=require('config')
     require('lib.func')
-    json=require('lib.json')
+
+    anim=require('lib.anim')
+    color=require("lib.hex2color")
     lg.setLineStyle("rough")
 
     shove=require('lib.shove')
@@ -43,8 +51,4 @@ end
 function love.update(dt)
     timer.update(dt)
     input:update()
-end
-
-function love.draw()
-    
 end
