@@ -129,6 +129,26 @@ function pl:update(dt)
     local spd=80
     if input:pressed("shoot") and #self.bullets<3 then
         local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
+        b.die=function(v)
+            local rnd=love.math.random
+            for i=1,love.math.random(1,3) do
+                local d=math.random(-20,20)
+                self.parent.particles.new(
+                    v.x+rnd(0,v.w),
+                    v.y+rnd(0,v.h/2),
+                    d,-20,-d,math.random(50,80),
+                    1,
+                    function(x,y,lt,time,data)
+                        lg.setColor(1,1,1,1)
+                        sheet:draw(data.spr,x,y)
+                    end,
+                    function()
+
+                    end,
+                    {spr=rnd(491,494)}
+                )
+            end
+        end
         self.parent.world:add(b,b.x,b.y,b.w,b.h)
         table.insert(self.bullets,b)
 

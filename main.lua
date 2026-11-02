@@ -33,6 +33,10 @@ function love.load()
     local baton=require("lib/baton")
     input=baton.new(conf.input)
 
+    shaders={
+        white=lg.newShader("shaders/white.glsl")
+    }
+
     fonts={
         monogram=assets.fonts.monogram.monogram(16),
         pixel=lg.newImageFont("assets/fonts/pixel/round_6x6.png",[==[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()[]{}<>/*:#%!?.,'"@&$ ]==],1)

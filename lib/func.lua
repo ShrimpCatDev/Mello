@@ -80,3 +80,41 @@ function dwrap(func)
         func()
     lg.pop()
 end
+
+function damageEnemy(h,v,self)
+    v.glow=0.1
+    h.other.kill=true
+    v.hp=v.hp-1
+    self.timer:tween(0.08,v,{bw=0.6,bh=1.4},"out-cubic",function()
+        self.timer:tween(0.1,v,{bw=1,bh=1},"out-back",function()
+    
+        end)
+    end)
+
+    if v.hp<1 and not v.kill then
+        v.kill=true
+        self.parent.score=self.parent.score+50
+        self.parent.items:new(v.x,v.y,self.drops)
+        local s=assets.sfx.hurt2:clone()
+        s:setPitch(love.math.random(100,110)/100)
+        s:play()
+    end
+end
+
+function initEnemy(a)
+    a.glow=0
+    a.bw=1
+    a.bh=1
+end
+
+function drawEnemy(v,func)
+    lg.setShader(shaders.white)
+    shaders.white:send("WhiteFactor",math.ceil(math.max(v.glow,0)))
+        local o=0
+        if v.dir==-1 then
+            o=8
+        end
+        sheet:draw(v.anim:get(),v.x+v.w/2,v.y+v.h,0,v.dir*v.bw,v.bh,v.w/2,v.h)
+        func(o,v)
+    lg.setShader()
+end

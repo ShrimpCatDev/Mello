@@ -18,6 +18,7 @@ function shroom:new(x,y)
     a.animRun=anim.new({468,469,470},80,"loop")
     a.animJump=anim.new({471},80,"loop")
     a.anim=a.animRun
+    initEnemy(a)
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
 end
@@ -25,6 +26,7 @@ end
 function shroom:update(dt)
     self.timer:update(dt)
     for k,v in pairs(self.items) do
+        v.glow=v.glow-dt
         v.anim:update(dt)
         v.jump=false
         v.prevY=v.y
@@ -68,18 +70,7 @@ function shroom:update(dt)
             end
 
             if h.other.kind=="pbullet" then
-                h.other.kill=true
-                v.hp=v.hp-1
-                if v.hp<1 and not v.kill then
-                    v.kill=true
-                    self.parent.score=self.parent.score+50
-                    self.parent.items:new(v.x,v.y,self.drops)
-                    local s=assets.sfx.hurt2:clone()
-                    s:setPitch(love.math.random(100,110)/100)
-                    s:play()
-                else
-                    
-                end
+                damageEnemy(h,v,self)
             end
 
             if h.other.kind=="player" then
@@ -94,11 +85,9 @@ end
 function shroom:draw()
     dwrap(function()
         for k,v in pairs(self.items) do
-            local o=0
-            if v.dir==-1 then
-                o=8
-            end
-            sheet:draw(v.anim:get(),v.x+o,v.y,0,v.dir,1)
+            drawEnemy(v,function()
+            
+            end)
         end
     end)
 end

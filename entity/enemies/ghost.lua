@@ -9,6 +9,7 @@ function temp:init(parent)
         "pear","pie"
     }
     self.hats={433,434,435,436}
+    self.timer=timer:new()
 end
 
 function temp:new(x,y)
@@ -17,6 +18,7 @@ function temp:new(x,y)
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     a.anim=anim.new({450,451},250,"loop")
     a.hat=self.hats[love.math.random(1,#self.hats)]
+    initEnemy(a)
     if love.math.random(1,50)==25 then
         a.hat=437
     end
@@ -25,6 +27,7 @@ end
 
 function temp:update(dt)
     for k,v in pairs(self.items) do
+        v.glow=v.glow-dt
         v.anim:update(dt)
         v.prevY=v.y
         --v.vy=v.vy+self.parent.world.gravity*dt
@@ -47,13 +50,7 @@ function temp:update(dt)
             end
 
             if h.other.kind=="pbullet" then
-                h.other.kill=true
-                v.hp=v.hp-1
-                if v.hp<1 then
-                    v.kill=true
-                    self.parent.score=self.parent.score+50
-                    self.parent.items:new(v.x,v.y,self.drops)
-                end
+                damageEnemy(h,v,self)
             end
 
             if h.other.kind=="player" then
@@ -68,12 +65,9 @@ end
 function temp:draw()
     dwrap(function()
         for k,v in pairs(self.items) do
-            local o=0
-            if v.dir==-1 then
-                o=8
-            end
-            sheet:draw(v.anim:get(),v.x+o,v.y,0,v.dir,1)
-            sheet:draw(v.hat,v.x+o,v.y-7,0,v.dir,1)
+            drawEnemy(v,function(o)
+                sheet:draw(v.hat,v.x+o,v.y-7,0,v.dir,1)
+            end)
         end
     end)
 end
