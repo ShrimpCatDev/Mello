@@ -8,7 +8,7 @@ lg=love.graphics
 if not unpack then unpack=table.unpack end --for lua 5.2 users lol
 
 function love.load()
-    version="v0.1a"
+    version="v0.1b"
 
     require('lib.require')
     json=require('lib.json')
