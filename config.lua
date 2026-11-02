@@ -24,6 +24,6 @@ conf.input={
     joystick = love.joystick.getJoysticks()[1]
 }
 
-conf.debug=true
+conf.debug=false
 
 return conf
