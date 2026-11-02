@@ -42,9 +42,27 @@ function items:update(dt)
             if h.other.kind=="player" then
                 v.kill=true
                 self.parent.score=self.parent.score+self.foods[v.id].points
+                
                 local s=assets.sfx.get:clone()
                 s:setPitch(love.math.random(80,120)/100)
                 s:play()
+
+                self.parent.particles.new(
+                    v.x+v.w/2,
+                    v.y+v.h/2,
+                    0,-20,0,0,
+                    1,
+                    function(x,y,lt,data)
+                        local t=self.foods[v.id].points
+                        lg.setColor(color("#f7f1e4",math.floor((love.timer.getTime()*16)%2)+0.5))
+                        local f=lg.getFont()
+                        lg.print(t,x-f:getWidth(t)/2,y-f:getHeight()/2)
+                    end,
+                    function()
+
+                    end,
+                    {}
+                )
             end
         end
 

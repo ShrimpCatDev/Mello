@@ -24,9 +24,11 @@ function part.update(dt)
 end
 
 function part.draw()
-    for k,p in ipairs(part.ps) do
-        p.df(p.x,p.y,p.lt,p.data)
-    end
+    dwrap(function()
+        for k,p in ipairs(part.ps) do
+            p.df(p.x,p.y,p.lt,p.data)
+        end
+    end)
 end
 
 function part.clear()

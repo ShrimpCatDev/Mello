@@ -26,6 +26,7 @@ function level:initLevel(level)
             self.map:draw()
         lg.setCanvas()
     end
+    self.particles.clear()
 
     --remove stuffs
     for k,v in pairs(self.world:getItems()) do
@@ -111,6 +112,9 @@ function level:enter(prev,bootLevel)
     self.spriteCanvas=lg.newCanvas(conf.gw,conf.gh)
     self.levelCanvas=lg.newCanvas(conf.gw,conf.gh)
 
+    self.particles=require('entity.particles')
+    self.particles.clear()
+
     self.first=true
     self.levelDone=false
     self.level=bootLevel or 1
@@ -137,9 +141,6 @@ function level:enter(prev,bootLevel)
 
     self.fade:fade(0.3,1,0,"#000000")
     self.paused=false
-
-    self.particles=require('entity.particles')
-    self.particles.clear()
 end
 
 function level:countEntities()
