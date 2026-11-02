@@ -8,6 +8,8 @@ function items:init(parent)
         ["pie"]={name="pie",sprite=538,points=50},
         ["cherry"]={name="cherry",sprite=539,points=60}
     }
+    self.get={}
+    self.timer=timer:new()
 end
 
 function items:new(x,y,kinds)
@@ -19,6 +21,7 @@ function items:new(x,y,kinds)
 end
 
 function items:update(dt)
+    self.timer:update(dt)
     for k,v in pairs(self.items) do
         v.prevY=v.y
         v.vy=v.vy+self.parent.world.gravity*dt
@@ -47,6 +50,15 @@ function items:update(dt)
                 s:setPitch(love.math.random(80,120)/100)
                 s:play()
 
+                local a={x=v.x,y=v.y,id=v.id,r=0,kill=false,w=8,h=8,sx=1,sy=1}
+                table.insert(self.get,a)
+                
+                self.timer:tween(0.3,a,{y=a.y-10},"out-cubic",function()
+                    self.timer:tween(0.2,a,{sx=0},"out-back",function()
+                        a.kill=true
+                    end)
+                end)
+
                 self.parent.particles.new(
                     v.x+v.w/2,
                     v.y+v.h/2,
@@ -72,12 +84,16 @@ function items:update(dt)
     end
 
     killStuff(self.parent.world,self.items)
+    killStuff(nil,self.get)
 end
 
 function items:draw()
     dwrap(function()
         for k,v in pairs(self.items) do
             sheet:draw(self.foods[v.id].sprite,v.x,v.y)
+        end
+        for k,v in pairs(self.get) do
+            sheet:draw(self.foods[v.id].sprite,v.x+v.w/2,v.y+v.h/2,v.r,v.sx,v.sy,v.w/2,v.h/2)
         end
     end)
 end

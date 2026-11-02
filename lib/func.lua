@@ -38,7 +38,7 @@ function killStuff(world,root)
     for i=#root,1,-1 do
         local b=root[i]
         if b.kill then
-            world:remove(b)
+            if world then world:remove(b) end
             table.remove(root,i)
         end
     end
@@ -86,18 +86,17 @@ function damageEnemy(h,v,self)
     h.other.kill=true
     v.hp=v.hp-1
     self.timer:tween(0.08,v,{bw=0.6,bh=1.4},"out-cubic",function()
-        self.timer:tween(0.1,v,{bw=1,bh=1},"out-back",function()
-    
-        end)
+        self.timer:tween(0.1,v,{bw=1,bh=1},"out-back",function() end)
     end)
+
+    local s=assets.sfx.hurt2:clone()
+    s:setPitch(love.math.random(100,110)/100)
+    s:play()
 
     if v.hp<1 and not v.kill then
         v.kill=true
         self.parent.score=self.parent.score+50
         self.parent.items:new(v.x,v.y,self.drops)
-        local s=assets.sfx.hurt2:clone()
-        s:setPitch(love.math.random(100,110)/100)
-        s:play()
     end
 end
 
