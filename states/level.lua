@@ -201,6 +201,15 @@ function level:update(dt)
             self.music:play()
         end
     end
+
+    if self.paused and not self.fade.fading then
+        if input:pressed("shoot") then
+            self.music:stop()
+            self.fade:fade(0.4,0,1,"#000000",function()
+                gs.switch(states.title)
+            end)
+        end
+    end
     --[[if self.player.y<=conf.gh/4 then
         self.bar.opacity=0
     else
@@ -290,7 +299,10 @@ function level:draw()
                 lg.setColor(color("#f7f1e4"))
                 local t="Paused"
                 local font=lg.getFont()
-                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2)
+                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2-4)
+
+                local t="Press X to return to title"
+                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2+4)
             end
 
             if conf.debug then
