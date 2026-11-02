@@ -8,6 +8,7 @@ function shroom:init(parent)
     self.drops={
         "cherry","pie","pear"
     }
+    self.timer=timer:new()
 end
 
 function shroom:new(x,y)
@@ -22,6 +23,7 @@ function shroom:new(x,y)
 end
 
 function shroom:update(dt)
+    self.timer:update(dt)
     for k,v in pairs(self.items) do
         v.anim:update(dt)
         v.jump=false
@@ -44,7 +46,7 @@ function shroom:update(dt)
                     if love.math.random(0,100)==50 then
                         v.gonnaJump=true
                         v.anim=v.animJump
-                        timer.after(0.8,function()
+                        self.timer:after(0.8,function()
                             local s=assets.sfx.jumpSmall:clone()
                             s:setPitch(love.math.random(100,110)/100)
                             s:play()
