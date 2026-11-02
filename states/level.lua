@@ -306,6 +306,7 @@ end
 
 function level:leave()
     love.audio.stop()
+    timer.clear()
 end
 
 return level

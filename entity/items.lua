@@ -42,6 +42,9 @@ function items:update(dt)
             if h.other.kind=="player" then
                 v.kill=true
                 self.parent.score=self.parent.score+self.foods[v.id].points
+                local s=assets.sfx.get:clone()
+                s:setPitch(love.math.random(80,120)/100)
+                s:play()
             end
         end
 

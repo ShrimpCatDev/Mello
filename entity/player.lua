@@ -69,6 +69,8 @@ function pl:damage(hp)
         self.invis=self.maxInvis
         self.hp=self.hp-damage
 
+        assets.sfx.hurt2:play()
+
         if self.hp<1 then
             self.parent:gameOver()
         end

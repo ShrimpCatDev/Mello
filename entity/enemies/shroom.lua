@@ -72,6 +72,11 @@ function shroom:update(dt)
                     v.kill=true
                     self.parent.score=self.parent.score+50
                     self.parent.items:new(v.x,v.y,self.drops)
+                    local s=assets.sfx.hurt2:clone()
+                    s:setPitch(love.math.random(100,110)/100)
+                    s:play()
+                else
+                    
                 end
             end
 
