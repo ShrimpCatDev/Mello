@@ -88,12 +88,14 @@ function level:gameOver()
     self.over=true
 
     timer.script(function(wait)
+        self.music:stop()
         timer.tween(0.5,self.fade,{opacity=1},"in-cubic")
         wait(0.2)
         timer.tween(0.8,self.player,{x=conf.gw/2-self.player.w/2,y=conf.gh/2-self.player.h/2},"out-cubic",function()
             self.player.anim.current=self.player.anim.die
         end)
         wait(2)
+        assets.music.die:play()
         self.deadAnimDone=true
     end)
     --gs.switch(states.gameover,self.level,self.score)
@@ -125,6 +127,10 @@ function level:enter(prev,bootLevel)
     self.fade={opacity=0}
     self.over=false
     self.deadAnimDone=false
+    self.music=assets.music.level
+    self.music:setLooping(true)
+    self.music:stop()
+    self.music:play()
 end
 
 function level:countEntities()
