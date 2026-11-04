@@ -154,7 +154,7 @@ function map:drawFlags()
     for row,i in ipairs(self.data.flags) do
         for col,v in ipairs(i) do
             local x,y=(col-1)*self.tilewidth,(row-1)*self.tileheight
-            lg.setColor(self.flagColors[v+1])
+            lg.setColor(self.flagColors[v+1] or {1,0,1,0.5})
             lg.rectangle("fill",x,y,self.tilewidth,self.tileheight)
         end
     end
