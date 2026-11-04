@@ -220,6 +220,15 @@ function exp:keypressed(k)
         self.bg=self.bgs[self.map.data.bg] 
         self.bg:init()
     end
+    if k=="v" then
+        self.selectedBg=self.selectedBg-1
+        if self.selectedBg<1 then
+            self.selectedBg=#self.bgIndex
+        end
+        self.map.data.bg=self.bgIndex[self.selectedBg]
+        self.bg=self.bgs[self.map.data.bg] 
+        self.bg:init()
+    end
 end
 
 function exp:mousepressed(x,y,b)
