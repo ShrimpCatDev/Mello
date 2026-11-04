@@ -159,11 +159,12 @@ function pl:update(dt)
 
     for k,v in ipairs(self.bullets) do
         v.timer=v.timer-dt
+        v.prevY=v.y
         v.vy=v.vy+self.parent.world.gravity*dt
         v.y=v.y+v.vy*dt
         v.x=v.x+v.vx*dt
         wrap(v,self.parent.world)
-        local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,bfilter)
+        local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,filter)
         v.x,v.y=ax,ay
 
         for k,h in ipairs(col) do

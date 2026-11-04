@@ -56,3 +56,10 @@ function love.update(dt)
     timer.update(dt)
     input:update()
 end
+
+function love.keypressed(k)
+    if k=="f5" then
+        assets.maps.tileset=lg.newImage("assets/maps/tileset.png")
+        tileset=sheet:init(assets.maps.tileset,8,8)
+    end
+end

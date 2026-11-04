@@ -85,7 +85,7 @@ function level:initLevel(level)
     self.levelDone=false
 
     
-    timer.tween(0.3,self,{bgFade=0},"out-cubic",function()
+    timer.tween(0.3,self,{bgFade=0},"in-cubic",function()
         self.bg=self.bgs[self.map.data.bg or "checker"] or "checker"
         self.bg:init()
     end)
@@ -255,7 +255,8 @@ function level:draw()
 
     shove.beginDraw()
         shove.beginLayer("terrain")
-            lg.setColor(1,1,1,self.bgFade)
+            local o=math.floor(self.bgFade*4+0.5)/4
+            lg.setColor(1,1,1,o)
                 lg.draw(self.bgCanvas)
             lg.setColor(1,1,1,1)
 
