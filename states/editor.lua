@@ -47,11 +47,32 @@ function exp:enter(prev,name)
         ox=0,oy=0
     }
 
+    self.bgs=require.tree("backgrounds")
+    self.bgIndex={}
+    for k,v in pairs(self.bgs) do
+        table.insert(self.bgIndex,k)
+    end
+
     self.map:load("levels/"..self.name..".json")
     if self.map.data.sprites then self.sprites=self.map.data.sprites end
+
+    self.bg=self.bgs["checker"]
+    if self.map.data.bg then 
+        self.bg=self.bgs[self.map.data.bg] 
+    else
+        self.map.data.bg="checker"
+    end
+    self.bg:init()
+
+    for k,v in ipairs(self.bgIndex) do
+        if v==self.map.data.bg then
+            self.selectedBg=k
+        end
+    end
 end
 
 function exp:update(dt)
+    self.bg:update()
     local inside,mx,my=shove.mouseToViewport()
     self.mouse.x,self.mouse.y=mx,my
     if inside then
@@ -81,19 +102,7 @@ function exp:draw()
     shove.beginDraw()
         shove.beginLayer("map")
             if self.mode=="draw" then
-                local colors={
-                    {0.05,0.05,0.1},
-                    {0.1,0.1,0.15}
-                }
-
-                for y=-1,(conf.gh/8) do
-                    for x=-1,(conf.gw/8) do
-                        lg.setColor(colors[(x+y)%2+1])
-                        local xx=(x*8)+(love.timer.getTime()*4)%8
-                        local yy=(y*8)+(love.timer.getTime()*4)%8
-                        lg.rectangle("fill",xx,yy,8,8)
-                    end
-                end
+                self.bg:draw()
 
                 lg.setColor(1,1,1,1)
                 if self.bar.mode==3 then
@@ -202,7 +211,15 @@ function exp:keypressed(k)
     if k=="escape" then
         gs.switch(states.title)
     end
-    
+    if k=="b" then
+        self.selectedBg=self.selectedBg+1
+        if self.selectedBg>#self.bgIndex then
+            self.selectedBg=1
+        end
+        self.map.data.bg=self.bgIndex[self.selectedBg]
+        self.bg=self.bgs[self.map.data.bg] 
+        self.bg:init()
+    end
 end
 
 function exp:mousepressed(x,y,b)

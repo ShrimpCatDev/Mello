@@ -78,10 +78,17 @@ function level:initLevel(level)
         timer.after(0.5,function()
             self.active=true
         end)
+        timer.tween(0.4,self,{bgFade=1},"out-cubic",function() end)
     end)
 
     self.first=false
     self.levelDone=false
+
+    
+    timer.tween(0.3,self,{bgFade=0},"out-cubic",function()
+        self.bg=self.bgs[self.map.data.bg or "checker"] or "checker"
+        self.bg:init()
+    end)
 end
 
 function level:gameOver()
@@ -114,6 +121,11 @@ function level:enter(prev,bootLevel)
 
     self.particles=require('entity.particles')
     self.particles.clear()
+
+    self.bgs=require.tree("backgrounds")
+    self.bg=self.bgs["checker"]
+    self.bgCanvas=lg.newCanvas(conf.gw,conf.gh)
+    self.bgFade=0
 
     self.first=true
     self.levelDone=false
@@ -159,6 +171,7 @@ function level:countEntities()
 end
 
 function level:update(dt)
+    self.bg:update(dt)
     self.map:update(dt)
     if self.active and not self.paused then
         self.items:update(dt)
@@ -236,25 +249,15 @@ function level:draw()
         lg.setColor(1,1,1,o)
         lg.draw(self.spriteCanvas)
         self.particles.draw()
+    lg.setCanvas(self.bgCanvas)
+        self.bg:draw()
     lg.setCanvas()
 
     shove.beginDraw()
         shove.beginLayer("terrain")
-            --colors for the bg
-            local colors={
-                {0.05,0.05,0.1},
-                {0.1,0.1,0.15}
-            }
-
-            --cool scrolling background checkerboard yes
-            for y=-1,(conf.gh/8) do
-                for x=-1,(conf.gw/8) do
-                    lg.setColor(colors[(x+y)%2+1])
-                    local xx=(x*8)+(love.timer.getTime()*4)%8
-                    local yy=(y*8)+(love.timer.getTime()*4)%8
-                    lg.rectangle("fill",xx,yy,8,8)
-                end
-            end
+            lg.setColor(1,1,1,self.bgFade)
+                lg.draw(self.bgCanvas)
+            lg.setColor(1,1,1,1)
 
             --shadow for the map and sprites
             lg.setColor(0,0,0,1)
