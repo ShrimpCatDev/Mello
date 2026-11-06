@@ -40,11 +40,25 @@ function shroom:update(dt)
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,self.parent.filter)
         v.x,v.y=ax,ay
 
+        v.vx=0
         for _,h in ipairs(col) do
             if (h.other.flag==1 or h.other.flag==2) and h.normal.y<0 then
                 v.vy=0
                 v.jump=true
-                if not v.gonnaJump then
+                v.vx=self.speed*v.dir
+                
+                local ax1,ay1,col1,len1=self.parent.world:check(v,v.x,v.y-(8*3),function(item,other)
+                    if other.flag and other.flag==2 then
+                        return "cross"
+                    end
+                    return nil
+                end)
+                local cj=false
+                for i,j in ipairs(col1) do
+                    cj=true
+                end
+
+                if not v.gonnaJump and cj then
                     if love.math.random(0,100)==50 then
                         v.gonnaJump=true
                         v.anim=v.animJump

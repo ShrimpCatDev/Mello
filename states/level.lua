@@ -89,6 +89,7 @@ function level:initLevel(level)
         self.bg=self.bgs[self.map.data.bg or "checker"] or "checker"
         self.bg:init()
     end)
+    self.timer:clear()
 end
 
 function level:gameOver()
@@ -110,6 +111,8 @@ function level:gameOver()
 end
 
 function level:enter(prev,bootLevel)
+    self.timer=timer:new()
+    
     local bump=require('lib.bump')
     self.world=bump.newWorld(8)
     self.world.gravity=400
@@ -171,6 +174,7 @@ function level:countEntities()
 end
 
 function level:update(dt)
+    self.timer:update(dt)
     self.bg:update(dt)
     self.map:update(dt)
     if self.active and not self.paused then

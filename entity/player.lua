@@ -129,6 +129,7 @@ function pl:update(dt)
     local spd=80
     if input:pressed("shoot") and #self.bullets<3 then
         local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
+        b.prevY=b.y
         b.die=function(v)
             local rnd=love.math.random
             for i=1,love.math.random(1,3) do
@@ -159,7 +160,6 @@ function pl:update(dt)
 
     for k,v in ipairs(self.bullets) do
         v.timer=v.timer-dt
-        v.prevY=v.y
         v.vy=v.vy+self.parent.world.gravity*dt
         v.y=v.y+v.vy*dt
         v.x=v.x+v.vx*dt

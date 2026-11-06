@@ -15,7 +15,7 @@ end
 function items:new(x,y,kinds)
     local k=kinds[love.math.random(1,#kinds)]
     local data=self.foods[k]
-    local a={x=x,y=y,id=k,kind="item",w=8,h=8,vx=0,vy=-90,prevY=0,kill=false,timer=5}
+    local a={x=x,y=y,id=k,kind="item",w=8,h=8,vx=0,vy=-90*0.6,prevY=0,kill=false,timer=5}
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
 end
@@ -24,7 +24,7 @@ function items:update(dt)
     self.timer:update(dt)
     for k,v in pairs(self.items) do
         v.prevY=v.y
-        v.vy=v.vy+self.parent.world.gravity*dt
+        v.vy=v.vy+self.parent.world.gravity*0.6*dt
         v.x=v.x+v.vx*dt
         v.y=v.y+v.vy*dt
         v.timer=v.timer-dt
