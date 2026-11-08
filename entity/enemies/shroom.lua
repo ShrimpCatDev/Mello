@@ -13,11 +13,12 @@ end
 
 function shroom:new(x,y)
     local rnd={-1,1}
-    local a={dir=rnd[love.math.random(1,2)],x=x,y=y,id="shroom",kind="enemy",w=8,h=8,vx=self.speed,vy=0,prevY=0,kill=false,hp=self.hp,gonnaJump=false}
+    local a={dir=rnd[love.math.random(1,2)],x=x,y=y,id="shroom",kind="enemy",w=8,h=8,vx=self.speed,vy=0,prevY=0,kill=false,hp=self.hp,gonnaJump=false,jumping=false}
     a.vx=self.speed*a.dir
     a.animRun=anim.new({468,469,470},80,"loop")
     a.animJump=anim.new({471},80,"loop")
     a.anim=a.animRun
+    a.jumpTimer=love.math.random(30,60)/10
     initEnemy(a)
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
@@ -26,6 +27,7 @@ end
 function shroom:update(dt)
     self.timer:update(dt)
     for k,v in pairs(self.items) do
+        v.jumpTimer=v.jumpTimer-dt
         v.glow=v.glow-dt
         v.anim:update(dt)
         v.jump=false
@@ -40,9 +42,12 @@ function shroom:update(dt)
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,self.parent.filter)
         v.x,v.y=ax,ay
 
-        v.vx=0
+        if v.vy>0 and not v.jumping then
+            v.vx=0
+        end 
         for _,h in ipairs(col) do
             if (h.other.flag==1 or h.other.flag==2) and h.normal.y<0 then
+                v.jumping=false
                 v.vy=0
                 v.jump=true
                 v.vx=self.speed*v.dir
@@ -59,7 +64,8 @@ function shroom:update(dt)
                 end
 
                 if not v.gonnaJump and cj then
-                    if love.math.random(0,100)==50 then
+                    if v.jumpTimer<=0 then
+                        v.jumpTimer=love.math.random(10,50)/10
                         v.gonnaJump=true
                         v.anim=v.animJump
                         self.timer:after(0.8,function()
@@ -69,6 +75,7 @@ function shroom:update(dt)
                             v.vy=-160
                             v.gonnaJump=false
                             v.anim=v.animRun
+                            v.jumping=true
                         end)
                     end
                 end
