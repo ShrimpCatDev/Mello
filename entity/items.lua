@@ -46,7 +46,8 @@ function items:update(dt)
                 v.kill=true
                 self.parent.score=self.parent.score+self.foods[v.id].points
                 
-                local s=assets.sfx.get:clone()
+                local s=assets.sfx.get
+                s:stop()
                 s:setPitch(love.math.random(80,120)/100)
                 s:play()
 
@@ -78,8 +79,14 @@ function items:update(dt)
             end
         end
 
-        if v.timer<=0 then
+        if v.timer<=0  then
             v.kill=true
+            local a={x=v.x,y=v.y,id=v.id,r=0,kill=false,w=8,h=8,sx=1,sy=1}
+            table.insert(self.get,a)
+            
+            self.timer:tween(0.5,a,{sx=0},"in-back",function()
+                a.kill=true
+            end)
         end
     end
 

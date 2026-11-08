@@ -128,7 +128,7 @@ function pl:update(dt)
 
     local spd=80
     if input:pressed("shoot") and #self.bullets<3 then
-        local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,490),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
+        local b={x=pl.x,y=pl.y,w=4,h=4,s=math.random(486,491),kind="pbullet",vx=spd*self.dir,vy=-70,timer=1,kill=false}
         b.prevY=b.y
         b.die=function(v)
             local rnd=love.math.random
