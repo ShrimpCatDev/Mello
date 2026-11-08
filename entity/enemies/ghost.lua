@@ -14,7 +14,7 @@ end
 
 function temp:new(x,y)
     local rnd={-1,1}
-    local a={x=x,y=y,id="temp",kind="enemy",w=8,h=8,vx=0,vy=0,prevY=0,kill=false,hp=self.hp,dir=rnd[love.math.random(1,2)],dy=rnd[love.math.random(1,2)]}
+    local a={x=x,y=y,id="temp",kind="enemy",w=8,h=8,vx=0,vy=0,prevY=0,kill=false,hp=self.hp,dir=rnd[love.math.random(1,2)],dy=rnd[love.math.random(1,2)],hy=0,hvy=0}
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     a.anim=anim.new({450,451},250,"loop")
     a.hat=self.hats[love.math.random(1,#self.hats)]
@@ -26,6 +26,7 @@ function temp:new(x,y)
 end
 
 function temp:update(dt)
+    self.timer:update(dt)
     for k,v in pairs(self.items) do
         v.glow=v.glow-dt
         v.anim:update(dt)
@@ -35,6 +36,11 @@ function temp:update(dt)
         v.vy=v.dy*self.speed
         v.x=v.x+v.vx*dt
         v.y=v.y+v.vy*dt
+
+        v.hvy=v.hvy+self.parent.world.gravity*dt
+        v.hy=v.hy+v.hvy*dt
+        v.hy=math.min(v.hy,0)
+
         wrap(v,self.parent.world)
 
         local ax,ay,col,len=self.parent.world:move(v,v.x,v.y,self.parent.filter)
@@ -51,6 +57,7 @@ function temp:update(dt)
 
             if h.other.kind=="pbullet" then
                 damageEnemy(h,v,self)
+                v.hvy=-80
             end
 
             if h.other.kind=="player" then
@@ -66,7 +73,7 @@ function temp:draw()
     dwrap(function()
         for k,v in pairs(self.items) do
             drawEnemy(v,function(o)
-                sheet:draw(v.hat,v.x+o,v.y-7,0,v.dir,1)
+                sheet:draw(v.hat,v.x+o,v.y+v.hy-7,0,v.dir,1)
             end)
         end
     end)
