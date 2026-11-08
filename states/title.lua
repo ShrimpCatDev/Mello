@@ -57,7 +57,8 @@ end
 function title:draw()
     shove.beginDraw()
         shove.beginLayer("map")
-            lg.clear(color("#2da1c4"))
+            --lg.clear(color("#2da1c4"))
+            lg.draw(assets.sprites.cover)
             local total=(#self.letters*9)-1
             local t=love.timer.getTime()
             for k,v in ipairs(self.letters) do
