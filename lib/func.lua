@@ -85,8 +85,11 @@ function damageEnemy(h,v,self)
     v.glow=0.1
     h.other.kill=true
     v.hp=v.hp-1
-    self.timer:tween(0.08,v,{bw=0.6,bh=1.4},"out-cubic",function()
-        self.timer:tween(0.1,v,{bw=1,bh=1},"out-back",function() end)
+
+    if v.squish then self.timer:cancel(v.squish) end
+
+    v.squish=self.timer:tween(0.08,v,{bw=0.6,bh=1.4},"out-cubic",function()
+        v.squish=self.timer:tween(0.1,v,{bw=1,bh=1},"out-back",function() end)
     end)
 
     local s=assets.sfx.hurt2:clone()

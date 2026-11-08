@@ -57,7 +57,7 @@ function temp:update(dt)
 
             if h.other.kind=="pbullet" then
                 damageEnemy(h,v,self)
-                v.hvy=-80
+                if v.hy>=0 then v.hvy=-80 end
             end
 
             if h.other.kind=="player" then
