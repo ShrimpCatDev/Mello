@@ -12,6 +12,12 @@ function saveData()
     love.filesystem.write("save.json",d)
 end
 
+function loadData()
+    save.options=save.options or {}
+    save.options.volume=save.options.volume or {}
+    love.audio.setVolume(save.options.volume/100)
+end
+
 function love.load()
     version="v0.2a"
 
@@ -55,6 +61,7 @@ function love.load()
     local s=love.filesystem.read("save.json")
     if s then s=json.decode(s) end
     save=s or {}
+    loadData()
 
     gs=require('lib.hump.gamestate')
     gs.registerEvents()

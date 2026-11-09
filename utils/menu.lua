@@ -41,7 +41,7 @@ function menu:draw()
     lg.setColor(color("#f7f1e4"))
     local font=self.font
     for k,v in ipairs(self.items) do
-        lg.setColor(color("#f7f1e4",0.5))
+        lg.setColor(color("#bacdf1",0.8))
         local s=v.name
         if k==self.sel then
             --s="> "..v.name.." <"

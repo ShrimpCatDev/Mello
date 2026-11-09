@@ -15,6 +15,7 @@ function set:init()
             s.name="Volume: "..save.options.volume
             love.audio.setVolume(save.options.volume/100)
             local s=assets.sfx.get
+            s:setPitch(1)
             s:stop()
             s:play()
         end)
