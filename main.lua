@@ -19,7 +19,7 @@ function loadData()
 end
 
 function love.load()
-    version="v0.2a"
+    version="v0.3a"
 
     require('lib.require')
     json=require('lib.json')
