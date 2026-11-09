@@ -36,6 +36,14 @@ function title:init()
                 end)
             end
         )
+        self.menu:add(
+            "Start from level",
+            function()
+                self.textInput:spawn(function(output)
+                    gs.switch(states.level,tonumber(output))
+                end)
+            end
+        )
     end
 
     self.fade=require('utils.fade')
@@ -56,13 +64,39 @@ end
 function title:draw()
     shove.beginDraw()
         shove.beginLayer("map")
-            --lg.clear(color("#2da1c4"))
-            lg.draw(assets.sprites.cover)
-            local total=(#self.letters*9)-1
-            local t=love.timer.getTime()
-            for k,v in ipairs(self.letters) do
-                local p=k-1
-                sheet:draw(v,(p*9)+(conf.gw/2)-(total/2)+(math.sin(t*2+(k*0.4))*3),32+(math.cos(t*4+(k*0.8))*3))
+             --colors for the bg
+            local colors={
+                {0.05,0.05,0.1},
+                {0.1,0.1,0.15}
+            }
+
+            --cool scrolling background checkerboard yes
+            for y=-1,(conf.gh/8) do
+                for x=-1,(conf.gw/8) do
+                    lg.setColor(colors[(x+y)%2+1])
+                    local xx=(x*8)+(love.timer.getTime()*4)%8
+                    local yy=(y*8)+(love.timer.getTime()*4)%8
+                    lg.rectangle("fill",xx,yy,8,8)
+                end
+            end
+
+            lg.setColor(1,1,1,1)
+            local colors={
+                color("#d01f6c"),
+                color("#ff921b"),
+                color("#81ca05"),
+                color("#1a98e0"),
+                color("#f8fdff")
+            }
+
+            for i=0,#colors-1 do
+                lg.setColor(colors[i+1])
+                local total=(#self.letters*9)-1
+                local t=love.timer.getTime()+i*0.2
+                for k,v in ipairs(self.letters) do
+                    local p=k-1
+                    sheet:draw(v,(p*9)+(conf.gw/2)-(total/2)+(math.sin(t*2+(k*0.4))*3),32+(math.cos(t*4+(k*0.8))*3)+#colors-1-(i*0.5))
+                end
             end
 
             self.menu:draw()
