@@ -7,6 +7,11 @@
 lg=love.graphics
 if not unpack then unpack=table.unpack end --for lua 5.2 users lol
 
+function saveData()
+    local d=tostring(json.encode(save))
+    love.filesystem.write("save.json",d)
+end
+
 function love.load()
     version="v0.2a"
 
@@ -46,6 +51,10 @@ function love.load()
     states=require.tree('states')
 
     timer=require('lib.hump.timer')
+
+    local s=love.filesystem.read("save.json")
+    if s then s=json.decode(s) end
+    save=s or {}
 
     gs=require('lib.hump.gamestate')
     gs.registerEvents()

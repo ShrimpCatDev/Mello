@@ -10,7 +10,9 @@ function menu:init(x,y,defaultSel)
 end
 
 function menu:add(name,func)
-    table.insert(self.items,{name=name,func=func})
+    local item={name=name,func=func,parent=self}
+    table.insert(self.items,item)
+    return item
 end
 
 function menu:update(dt)
@@ -25,8 +27,8 @@ function menu:update(dt)
     if self.sel<1 then self.sel=#self.items end
 
     if input:pressed("jump") then
-        local f=self.items[self.sel].func
-        f(self)
+        local f=self.items[self.sel]
+        f.func(f)
     end
 end
 
@@ -34,9 +36,11 @@ function menu:draw()
     lg.setColor(color("#f7f1e4"))
     local font=self.font
     for k,v in ipairs(self.items) do
+        lg.setColor(color("#f7f1e4",0.5))
         local s=v.name
         if k==self.sel then
-            s="> "..v.name.." <"
+            --s="> "..v.name.." <"
+            lg.setColor(color("#f7f1e4",1))
         end
         lg.print(s,self.x-font:getWidth(s)/2,(k-1)*(font:getHeight()+1)+self.y)
     end

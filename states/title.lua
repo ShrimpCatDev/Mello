@@ -6,6 +6,8 @@ function title:init()
         560,561,562,563,564
     }
 
+    self.options=require("utils/settings")
+
     self.textInput=require('utils.textInput')
     self.textInput:init()
 
@@ -17,6 +19,12 @@ function title:init()
             self.fade:fade(0.4,0,1,"#000000",function()
                 gs.switch(states.level)
             end)
+        end
+    )
+    self.menu:add(
+        "Options",
+        function()
+            self.options:init()
         end
     )
     if conf.debug then
@@ -39,9 +47,10 @@ function title:enter()
 end
 
 function title:update(dt)
-    if not self.textInput.open then
+    if not self.textInput.open and not self.options.active then
         self.menu:update(dt)
     end
+    self.options:update(dt)
 end
 
 function title:draw()
@@ -64,6 +73,8 @@ function title:draw()
 
             local s="ShrimpCat"
             lg.print(s,1,conf.gh-lg.getFont():getHeight(s)-1)
+
+            self.options:draw()
 
             self.fade:draw()
         shove.endLayer()
