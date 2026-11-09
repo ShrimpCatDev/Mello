@@ -1,4 +1,5 @@
 local menu={}
+menu.__index=menu
 
 function menu:init(x,y,defaultSel)
     self.sel=defaultSel or 1
@@ -7,6 +8,10 @@ function menu:init(x,y,defaultSel)
     self.font=love.graphics.getFont()
     self.x=x or 0
     self.y=y or 0
+end
+
+function menu:clone()
+    return setmetatable({},self)
 end
 
 function menu:add(name,func)

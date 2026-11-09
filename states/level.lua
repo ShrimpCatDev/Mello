@@ -155,7 +155,41 @@ function level:enter(prev,bootLevel)
     self.fade:init()
 
     self.fade:fade(0.3,1,0,"#000000")
+
+    self.options=require("utils/settings")
     self.paused=false
+
+    local m=require("utils.menu")
+    self.pauseMenu=m:clone()
+    self.pauseMenu:init(conf.gw/2,0)
+
+    self.pauseMenu:add(
+        "Resume",
+        function()
+            self.paused=false
+
+            if self.paused then
+                self.music:pause()
+            else
+                self.music:play()
+            end
+        end
+    )
+    self.pauseMenu:add(
+        "Options",
+        function()
+            self.options:init()
+        end
+    )
+    self.pauseMenu:add(
+        "Return to title",
+        function()
+            self.music:stop()
+            self.fade:fade(0.4,0,1,"#000000",function()
+                gs.switch(states.title)
+            end)
+        end
+    )
 end
 
 function level:countEntities()
@@ -224,14 +258,10 @@ function level:update(dt)
         end
     end
 
-    if self.paused and not self.fade.fading then
-        if input:pressed("shoot") then
-            self.music:stop()
-            self.fade:fade(0.4,0,1,"#000000",function()
-                gs.switch(states.title)
-            end)
-        end
+    if self.paused and not self.fade.fading and not self.options.active then
+        self.pauseMenu:update(dt)
     end
+    self.options:update(dt)
 end
 
 function level:draw()
@@ -323,10 +353,11 @@ function level:draw()
                 lg.setColor(color("#f7f1e4"))
                 local t="Paused"
                 local font=lg.getFont()
-                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2-4)
+                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2-8)
 
-                local t="Press X to return to title"
-                lg.print(t,conf.gw/2-font:getWidth(t)/2,conf.gh/2-font:getHeight(t)/2+4)
+                self.pauseMenu.y=conf.gh/2-font:getHeight(t)/2-4+8
+                self.pauseMenu:draw()
+                self.options:draw()
             end
 
             --debug fps, ignore :3
