@@ -65,6 +65,8 @@ function set:init()
         end
     end
     self.w=pw+20
+
+    self.menu.y=conf.gw/2-(#menu.items*menu.font:getHeight()+8)/2
 end
 
 function set:update(dt)
