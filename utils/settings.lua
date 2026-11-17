@@ -21,6 +21,19 @@ function set:init()
         end)
     )
 
+    save.options.crt=save.options.crt or false
+    local i=self.menu:add(
+        "Toggle CRT Effect",
+        (function(s)
+            save.options.crt=not save.options.crt
+            if save.options.crt then
+                shove.addGlobalEffect(shaders.crt)
+            else
+                shove.removeGlobalEffect(shaders.crt)
+            end
+        end)
+    )
+
     local i=self.menu:add(
         "Exit",
         (function(s)

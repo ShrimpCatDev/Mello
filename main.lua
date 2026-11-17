@@ -16,6 +16,13 @@ function loadData()
     save.options=save.options or {}
     save.options.volume=save.options.volume or 100
     love.audio.setVolume(save.options.volume/100)
+
+    save.options.crt=save.options.crt or false
+    if save.options.crt then
+        shove.addGlobalEffect(shaders.crt)
+    else
+        shove.removeGlobalEffect(shaders.crt)
+    end
 end
 
 function love.load()
@@ -60,8 +67,6 @@ function love.load()
     shaders.crt:send("vignetteStrength",0.1)
     shaders.crt:send("curvature",0.05)
     shaders.crt:send("flickerStrength",0.001)
-    
-    shove.addGlobalEffect(shaders.crt)
 
     fonts={
         monogram=assets.fonts.monogram.monogram(16),
