@@ -14,7 +14,7 @@ end
 
 function loadData()
     save.options=save.options or {}
-    save.options.volume=save.options.volume or {}
+    save.options.volume=save.options.volume or 100
     love.audio.setVolume(save.options.volume/100)
 end
 
@@ -45,8 +45,23 @@ function love.load()
     input=baton.new(conf.input)
 
     shaders={
-        white=lg.newShader("shaders/white.glsl")
+        white=lg.newShader("shaders/white.glsl"),
+        crt=lg.newShader("shaders/crt-shader.frag")
     }
+
+    shaders.crt:send("scanlineIntensity",0.2)
+    shaders.crt:send("scanlineCount",conf.gh)
+    shaders.crt:send("brightness",0.95)
+    shaders.crt:send("contrast",1)
+    shaders.crt:send("saturation",1)
+    shaders.crt:send("bloomIntensity",0.5)
+    shaders.crt:send("bloomThreshold",0.1)
+    shaders.crt:send("rgbShift",0.2)
+    shaders.crt:send("vignetteStrength",0.1)
+    shaders.crt:send("curvature",0.05)
+    shaders.crt:send("flickerStrength",0.001)
+    
+    shove.addGlobalEffect(shaders.crt)
 
     fonts={
         monogram=assets.fonts.monogram.monogram(16),
@@ -71,6 +86,7 @@ end
 function love.update(dt)
     timer.update(dt)
     input:update()
+    shaders.crt:send("time",love.timer.getTime())
 end
 
 function love.keypressed(k)

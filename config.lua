@@ -10,7 +10,6 @@ conf.rendermode="layer"
 conf.fit="aspect"
 
 conf.filter="nearest"
-
 conf.input={
     controls={
         right={'key:d',"key:right","button:dpright"},
@@ -24,6 +23,6 @@ conf.input={
     joystick = love.joystick.getJoysticks()[1]
 }
 
-conf.debug=false
+conf.debug=true
 
 return conf
