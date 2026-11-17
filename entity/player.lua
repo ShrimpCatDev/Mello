@@ -88,11 +88,11 @@ function pl:update(dt)
     local mx=0
     self.invis=self.invis-dt
     
-    if input:down("right") then
+    if input:down("right") and not input:down("left") then
         mx=1
         self.dir=1
         self.anim.current=self.anim.run
-    elseif input:down("left") then
+    elseif input:down("left") and not input:down("right") then
         mx=-1
         self.dir=-1
         self.anim.current=self.anim.run

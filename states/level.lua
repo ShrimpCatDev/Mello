@@ -363,7 +363,7 @@ function level:draw()
             --debug fps, ignore :3
             if conf.debug then
                 lg.setColor(1,1,1,1)
-                lg.print(love.timer.getFPS(),1,9)
+                --lg.print(love.timer.getFPS(),1,9)
             end
 
             --Game over stuff
