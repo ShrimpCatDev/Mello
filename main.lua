@@ -23,6 +23,9 @@ function loadData()
     else
         shove.removeGlobalEffect(shaders.crt)
     end
+
+    save.options.fullscreen=save.options.fullscreen or false
+    love.window.setFullscreen(save.options.fullscreen)
 end
 
 function love.load()

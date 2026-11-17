@@ -45,6 +45,12 @@ function title:init()
             end
         )
     end
+    self.menu:add(
+        "Quit Game",
+        function()
+            love.event.quit()
+        end
+    )
 
     self.fade=require('utils.fade')
     self.fade:init()
