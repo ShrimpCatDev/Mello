@@ -15,6 +15,10 @@ end
 
 function level:init()
     shove.createLayer("terrain")
+    shove.createLayer("test",{visible=false})
+
+    self.gradient=lg.newGradient("vertical",{color("#ff4800",0),color("#ff4800",1)})
+    shove.setLayerBlendMode("test", shove.BLEND.ADD)
     shove.createLayer("ui")
 end
 
@@ -197,6 +201,8 @@ function level:enter(prev,bootLevel)
             end)
         end
     )
+
+    self.time=0
 end
 
 function level:countEntities()
@@ -215,8 +221,12 @@ function level:countEntities()
 end
 
 function level:update(dt)
+    if not self.paused then
+        self.time=self.time+dt
+        self.bg:update(dt)
+    end
+
     self.timer:update(dt)
-    self.bg:update(dt)
     self.map:update(dt)
     if self.active and not self.paused then
         self.items:update(dt)
@@ -268,6 +278,7 @@ function level:update(dt)
     if self.paused and not self.fade.fading and not self.options.active then
         self.pauseMenu:update(dt)
     end
+
     self.options:update(dt)
 end
 
@@ -306,6 +317,11 @@ function level:draw()
             lg.draw(self.shadow,1,1)
             lg.setColor(1,1,1,1)
             lg.draw(self.shadow)
+        shove.endLayer()
+
+        shove.beginLayer("test")
+            lg.setColor(1,1,1,(math.cos(self.time*8)+1)*0.5)
+            lg.draw(self.gradient,0,0,0,conf.gw,conf.gh)
         shove.endLayer()
 
         lg.setCanvas(self.bar.canvas)

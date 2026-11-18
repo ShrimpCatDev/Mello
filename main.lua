@@ -4,6 +4,7 @@
     Look at your own risk, ill try to clean things up later fs fs fs
 ]]
 
+require("lib.love-extensions.love_extensions")
 lg=love.graphics
 if not unpack then unpack=table.unpack end --for lua 5.2 users lol
 
