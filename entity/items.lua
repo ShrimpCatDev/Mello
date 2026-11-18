@@ -10,7 +10,18 @@ function items:init(parent)
         ["popsicle"]={name="popsicle",sprite=533,points=250},
         ["turnip"]={name="turnip",sprite=534,points=200},
         ["meat"]={name="meat",sprite=535,points=150},
-        ["coconut"]={name="coconut",sprite=536,points=70}
+        ["coconut"]={name="coconut",sprite=536,points=70},
+
+        ["speedPotion"]={name="speedPotion",sprite=513,points=200,func=function(v,pl)
+            pl.speed=100
+        end},
+        ["healPotion"]={name="healPotion",sprite=518,points=250,func=function(v,pl)
+            pl.hp=pl.maxHp
+        end},
+        ["healthPotion"]={name="healthPotion",sprite=515,points=250,func=function(v,pl)
+            pl.maxHp=pl.maxHp+1
+            pl.maxHp=math.min(pl.maxHp,10)
+        end}
     }
     self.get={}
     self.timer=timer:new()
@@ -20,6 +31,7 @@ function items:new(x,y,kinds,special)
     local k=kinds[love.math.random(1,#kinds)]
     local data=self.foods[k]
     local a={x=x,y=y,id=k,kind="item",w=8,h=8,vx=0,vy=-90*0.6,prevY=0,kill=false,timer=5}
+    a.func=data.func or false
     a.special=special or false
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
@@ -57,6 +69,7 @@ function items:update(dt)
             if h.other.kind=="player" then
                 v.kill=true
                 self.parent.score=self.parent.score+self.foods[v.id].points
+                if v.func then v.func(v,self.parent.player) end
                 
                 local s=assets.sfx.get
                 s:stop()
