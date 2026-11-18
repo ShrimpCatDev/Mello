@@ -59,6 +59,13 @@ function level:initLevel(level)
         if e then
             e:new(v.x,v.y)
         end
+
+        if v.id=="spawner" then
+            if self.itemTimer then timer.cancel(self.itemTimer) end
+            self.itemTimer=timer.after(3,function()
+                self.items:new(v.x,v.y,{"popsicle","meat","turnip","coconut"},true)
+            end)
+        end
     end
 
     --init player

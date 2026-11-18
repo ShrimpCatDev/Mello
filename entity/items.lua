@@ -6,27 +6,39 @@ function items:init(parent)
     self.foods={
         ["pear"]={name="pear",sprite=537,points=40},
         ["pie"]={name="pie",sprite=538,points=50},
-        ["cherry"]={name="cherry",sprite=539,points=60}
+        ["cherry"]={name="cherry",sprite=539,points=60},
+        ["popsicle"]={name="popsicle",sprite=533,points=250},
+        ["turnip"]={name="turnip",sprite=534,points=200},
+        ["meat"]={name="meat",sprite=535,points=150},
+        ["coconut"]={name="coconut",sprite=536,points=70}
     }
     self.get={}
     self.timer=timer:new()
 end
 
-function items:new(x,y,kinds)
+function items:new(x,y,kinds,special)
     local k=kinds[love.math.random(1,#kinds)]
     local data=self.foods[k]
     local a={x=x,y=y,id=k,kind="item",w=8,h=8,vx=0,vy=-90*0.6,prevY=0,kill=false,timer=5}
+    a.special=special or false
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
+
+    a.sx=0
+    self.timer:tween(0.2,a,{sx=1},"out-cubic")
 end
 
 function items:update(dt)
     self.timer:update(dt)
     for k,v in pairs(self.items) do
         v.prevY=v.y
-        v.vy=v.vy+self.parent.world.gravity*0.6*dt
-        v.x=v.x+v.vx*dt
-        v.y=v.y+v.vy*dt
+
+        if not v.special then
+            v.vy=v.vy+self.parent.world.gravity*0.6*dt
+            v.x=v.x+v.vx*dt
+            v.y=v.y+v.vy*dt
+        end
+
         v.timer=v.timer-dt
         wrap(v,self.parent.world)
 
@@ -97,7 +109,7 @@ end
 function items:draw()
     dwrap(function()
         for k,v in pairs(self.items) do
-            sheet:draw(self.foods[v.id].sprite,v.x,v.y)
+            sheet:draw(self.foods[v.id].sprite,v.x+v.w/2,v.y+v.h/2,v.r,v.sx,v.sy,v.w/2,v.h/2)
         end
         for k,v in pairs(self.get) do
             sheet:draw(self.foods[v.id].sprite,v.x+v.w/2,v.y+v.h/2,v.r,v.sx,v.sy,v.w/2,v.h/2)
