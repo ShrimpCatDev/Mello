@@ -64,10 +64,11 @@ function level:initLevel(level)
             e:new(v.x,v.y)
         end
 
-        if v.id=="spawner" then
+        local d=data.specialItems
+        if v.id=="spawner" and (self.level-1)%d.spawnRate==0 then
             if self.itemTimer then timer.cancel(self.itemTimer) end
             self.itemTimer=timer.after(3,function()
-                self.items:new(v.x,v.y,{"speedPotion","healPotion","healthPotion"},true)
+                self.items:new(v.x,v.y,{d.items[(((math.ceil(self.level/d.spawnRate))-1)%#d.items)+1]},true)
             end)
         end
     end
@@ -157,6 +158,7 @@ function level:enter(prev,bootLevel)
     self.fadeDeath={opacity=0}
     self.over=false
     self.deadAnimDone=false
+    
     self.music=assets.music.level
     self.music:setLooping(true)
     self.music:stop()

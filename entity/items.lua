@@ -16,7 +16,8 @@ function items:init(parent)
             pl.speed=100
         end},
         ["healPotion"]={name="healPotion",sprite=518,points=250,func=function(v,pl)
-            pl.hp=pl.maxHp
+            pl.hp=pl.hp+1
+            pl.hp=math.min(pl.hp,pl.maxHp)
         end},
         ["healthPotion"]={name="healthPotion",sprite=515,points=250,func=function(v,pl)
             pl.maxHp=pl.maxHp+1
@@ -29,9 +30,9 @@ end
 
 function items:new(x,y,kinds,special)
     local k=kinds[love.math.random(1,#kinds)]
-    local data=self.foods[k]
+    local d=self.foods[k]
     local a={x=x,y=y,id=k,kind="item",w=8,h=8,vx=0,vy=-90*0.6,prevY=0,kill=false,timer=5}
-    a.func=data.func or false
+    a.func=d.func or false
     a.special=special or false
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
@@ -90,7 +91,7 @@ function items:update(dt)
                     v.y+v.h/2,
                     0,-20,0,0,
                     1,
-                    function(x,y,lt,time,data)
+                    function(x,y,lt,time,d)
                         local t=self.foods[v.id].points
                         lg.setColor(color("#f7f1e4",math.floor((love.timer.getTime()*16)%2)+0.5))
                         local f=lg.getFont()

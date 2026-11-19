@@ -32,6 +32,8 @@ end
 function love.load()
     version="v0.3a"
 
+    data=require("data")
+
     require('lib.require')
     json=require('lib.json')
 
