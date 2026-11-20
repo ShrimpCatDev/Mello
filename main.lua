@@ -4,7 +4,7 @@
     Look at your own risk, ill try to clean things up later fs fs fs
 ]]
 
-require("lib.love-extensions.love_extensions")
+require("lib.love-extensions.love_extensions.LoveGraphics")
 lg=love.graphics
 if not unpack then unpack=table.unpack end --for lua 5.2 users lol
 
@@ -25,12 +25,14 @@ function loadData()
         shove.removeGlobalEffect(shaders.crt)
     end
 
-    save.options.fullscreen=save.options.fullscreen or false
-    love.window.setFullscreen(save.options.fullscreen)
+    if conf.build~="web" then
+        save.options.fullscreen=save.options.fullscreen or false
+        love.window.setFullscreen(save.options.fullscreen)
+    end
 end
 
 function love.load()
-    version="v0.3a"
+    version="v0.4a"
 
     data=require("data")
 
@@ -65,8 +67,8 @@ function love.load()
     shaders.crt:send("scanlineIntensity",0.2)
     shaders.crt:send("scanlineCount",conf.gh)
     shaders.crt:send("brightness",0.95)
-    shaders.crt:send("contrast",1)
-    shaders.crt:send("saturation",1)
+    shaders.crt:send("contrast",1.0)
+    shaders.crt:send("saturation",1.0)
     shaders.crt:send("bloomIntensity",0.5)
     shaders.crt:send("bloomThreshold",0.1)
     shaders.crt:send("rgbShift",0.2)

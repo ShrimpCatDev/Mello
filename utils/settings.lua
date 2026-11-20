@@ -34,19 +34,21 @@ function set:init()
         end)
     )
 
-    save.options.fullscreen=save.options.fullscreen or false
-    local t={
-        [true]="Disable Fullscreen",
-        [false]="Enable Fullscreen"
-    }
-    local i=self.menu:add(
-        t[save.options.fullscreen],
-        (function(s)
-            save.options.fullscreen=not love.window.getFullscreen()
-            love.window.setFullscreen(save.options.fullscreen)
-            s.name=t[save.options.fullscreen]
-        end)
-    )
+    if conf.build~="web" then
+        save.options.fullscreen=save.options.fullscreen or false
+        local t={
+            [true]="Disable Fullscreen",
+            [false]="Enable Fullscreen"
+        }
+        local i=self.menu:add(
+            t[save.options.fullscreen],
+            (function(s)
+                save.options.fullscreen=not love.window.getFullscreen()
+                love.window.setFullscreen(save.options.fullscreen)
+                s.name=t[save.options.fullscreen]
+            end)
+        )
+    end
 
     local i=self.menu:add(
         "Exit",

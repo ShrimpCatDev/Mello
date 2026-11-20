@@ -54,6 +54,8 @@ function pl:init(parent,x,y)
         self.maxHp=5
         self.hp=self.maxHp
     end
+
+    
     
 
     self.invis=0

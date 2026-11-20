@@ -1,6 +1,6 @@
 local ext = (...):match('(.-)[^%.]+$')
 
-local bit = require 'bit'
+--local bit = require 'bit'
 local json = require(ext .. "include.JSON")
 
 ---@alias love.AtlasAsset string|love.Texture
@@ -199,10 +199,10 @@ local _setColor = love.graphics.setColor
 local function hexToRGBA(hex, format)
     format = format or "rgba"
 
-    local byte3 = bit.band(bit.rshift(hex, 24), 0xFF) / 255 -- highest byte
-    local byte2 = bit.band(bit.rshift(hex, 16), 0xFF) / 255
-    local byte1 = bit.band(bit.rshift(hex, 8), 0xFF) / 255
-    local byte0 = bit.band(hex, 0xFF) / 255 -- lowest byte
+    --local byte3 = bit.band(bit.rshift(hex, 24), 0xFF) / 255 -- highest byte
+    --local byte2 = bit.band(bit.rshift(hex, 16), 0xFF) / 255
+    --local byte1 = bit.band(bit.rshift(hex, 8), 0xFF) / 255
+    --local byte0 = bit.band(hex, 0xFF) / 255 -- lowest byte
 
     if format == "rgba" then
         return { byte3, byte2, byte1, byte0 }
