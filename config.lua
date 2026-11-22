@@ -23,7 +23,7 @@ conf.input={
     joystick = love.joystick.getJoysticks()[1]
 }
 
-conf.debug=false
-conf.build="web"
+conf.debug=true
+conf.build="pc"
 
 return conf

@@ -1,0 +1,18 @@
+roadmap thingie to meep all my ideas down because i keep forgetting them TwT
+
+Planned worlds:
+1: Castle
+2: Snow
+3: Beach
+4: Water
+5: Lava
+
+Powerups:
+1: speed
+2: add hp
+3: add max hp
+4: add to max amount of balls that can be spawned by the player
+5: spawn lots of food in random (empty) spaces in the map
+6: kill all enemies with flash bang
+7: temporary invincibility
+8: freeze enemies for a certain amount of time
