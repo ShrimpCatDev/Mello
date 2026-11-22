@@ -2,5 +2,8 @@ return{
     specialItems={
         items={"speedPotion","healPotion","healthPotion"},
         spawnRate=2
+    },
+    foods={
+        "coconut","meat","turnip","popsicle"
     }
 }

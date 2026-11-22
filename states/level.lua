@@ -65,11 +65,17 @@ function level:initLevel(level)
         end
 
         local d=data.specialItems
-        if v.id=="spawner" and (self.level-1)%d.spawnRate==0 then
+        if v.id=="spawner" and (self.internalLevel-1)%d.spawnRate==0 then
             if self.itemTimer then timer.cancel(self.itemTimer) end
             self.itemTimer=timer.after(3,function()
-                self.items:new(v.x,v.y,{d.items[(((math.ceil(self.level/d.spawnRate))-1)%#d.items)+1]},true)
+                self.items:new(v.x,v.y,{d.items[(((math.ceil(self.internalLevel/d.spawnRate))-1)%#d.items)+1]},true)
             end)
+        end
+
+        local d=data.foods
+        if v.id=="foodSpawner" then
+            local i=((self.internalLevel-1)%#d)+1
+            self.items:new(v.x,v.y,{d[i]},false)
         end
     end
 
@@ -123,6 +129,7 @@ function level:gameOver()
 end
 
 function level:enter(prev,bootLevel)
+    self.internalLevel=1
     self.timer=timer:new()
     
     local bump=require('lib.bump')
@@ -241,6 +248,7 @@ function level:update(dt)
         if self:countEntities()<1 and not self.levelDone then
             self.levelDone=true
             self.level=self.level+1
+            self.internalLevel=self.internalLevel+1
             if not love.filesystem.read("levels/level"..self.level..".json") then
                 self.level=1
             end
