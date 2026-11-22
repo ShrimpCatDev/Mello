@@ -38,10 +38,13 @@ function exp:enter(prev,name)
     }
     self.selectedSprite=1
 
-    self.sprites={
+
+    self.ogSprites={
         {id="player",x=8,y=conf.gh-16,sprite=504,w=8,h=8,canRemove=false,kill=false},
-        {id="spawner",x=16,y=conf.gh-16,sprite=541,w=8,h=8,canRemove=false,kill=false}
+        {id="spawner",x=16,y=conf.gh-16,sprite=541,w=8,h=8,canRemove=false,kill=false},
+        {id="foodSpawner",x=24,y=conf.gh-16,sprite=543,w=8,h=8,canRemove=false,kill=false}
     }
+    self.sprites={}
     self.drag={
         active=nil,
         ox=0,oy=0
@@ -54,7 +57,31 @@ function exp:enter(prev,name)
     end
 
     self.map:load("levels/"..self.name..".json")
-    if self.map.data.sprites then self.sprites=self.map.data.sprites end
+    
+    if self.map.data.sprites then 
+        --self.sprites=self.map.data.sprites 
+        self.sprites=self.ogSprites
+        local add={}
+        for k,v in pairs(self.map.data.sprites) do
+            local got=false
+            for l,j in ipairs(self.sprites) do
+                if v.id==j.id then
+                    j=v
+                    got=true
+                end
+            end
+                        
+            if not got then
+                table.insert(add,v)
+            end
+        end
+
+        for k,v in pairs(add) do
+            table.insert(self.sprites,v)
+        end
+    else
+        self.sprites=self.ogSprites
+    end
 
     self.bg=self.bgs["checker"]
     if self.map.data.bg then 
