@@ -66,7 +66,9 @@ function exp:enter(prev,name)
             local got=false
             for l,j in ipairs(self.sprites) do
                 if v.id==j.id then
-                    j=v
+                    j.x=v.x
+                    j.y=v.y
+
                     got=true
                 end
             end
@@ -119,8 +121,16 @@ function exp:update(dt)
                 self.map:flag(col,row,0)
             end
         elseif self.drag.active then
-            self.drag.active.x=self.mouse.x-self.drag.ox
-            self.drag.active.y=self.mouse.y-self.drag.oy
+            local x=self.mouse.x-self.drag.ox
+            local y=self.mouse.y-self.drag.oy
+
+            self.drag.active.x=x
+            self.drag.active.y=y
+
+            if love.keyboard.isDown("g") then
+                self.drag.active.x=math.floor(x/4)*4
+                self.drag.active.y=math.floor(y/4)*4
+            end
         end
     end
 end
