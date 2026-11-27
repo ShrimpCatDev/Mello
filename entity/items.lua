@@ -72,10 +72,13 @@ function items:update(dt)
                 self.parent.score=self.parent.score+self.foods[v.id].points
                 if v.func then v.func(v,self.parent.player) end
                 
-                local s=assets.sfx.get
-                s:stop()
-                s:setPitch(love.math.random(80,120)/100)
-                s:play()
+                if v.special then
+                    sfx(v.sound or assets.sfx.special1)
+                else
+                    local s=assets.sfx.get
+                    s:setPitch(love.math.random(80,120)/100)
+                    sfx(s)
+                end
 
                 local a={x=v.x,y=v.y,id=v.id,r=0,kill=false,w=8,h=8,sx=1,sy=1}
                 table.insert(self.get,a)

@@ -120,3 +120,8 @@ function drawEnemy(v,func)
         func(o,v)
     lg.setShader()
 end
+
+function sfx(s)
+    s:stop()
+    s:play()
+end
