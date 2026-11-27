@@ -24,7 +24,7 @@ local function bfilter(item,other)
     return "cross"
 end
 
-function pl:init(parent,x,y)
+function pl:init(parent,x,y,first)
     self.parent=parent
     self.x=x or 0
     self.y=y or 0
@@ -63,6 +63,8 @@ function pl:init(parent,x,y)
     if self.squish then timer.cancel(self.squish) end
     self.sw=1
     self.sh=1
+
+    self.time=0
 end
 
 function pl:damage(hp)
@@ -81,6 +83,7 @@ function pl:damage(hp)
 end
 
 function pl:update(dt)
+    self.time=self.time+dt
     self.anim.current:update(dt)
     --YOINKED from another one of my games :3
     self.jump=false
@@ -220,7 +223,7 @@ function pl:draw()
         
         lg.setColor(1,1,1,1)
         if self.invis>0 and self.parent.active then
-            lg.setColor(1,1,1,math.floor((love.timer.getTime()*32)%2)+0.5)
+            lg.setColor(1,1,1,math.floor((self.time*32)%2)+0.5)
         end
 
         sheet:draw(self.anim.current:get(),self.x-1+4,self.y-1+8,0,self.dir*self.sw,self.sh,4,8)

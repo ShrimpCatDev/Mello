@@ -22,6 +22,8 @@ function shroom:new(x,y)
     initEnemy(a)
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
+
+    return a
 end
 
 function shroom:update(dt)

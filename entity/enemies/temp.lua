@@ -15,6 +15,8 @@ function temp:new(x,y)
     local a={x=x,y=y,id="temp",kind="enemy",w=8,h=8,vx=0,vy=0,prevY=0,kill=false,hp=self.hp,dir=1}
     self.parent.world:add(a,a.x,a.y,a.w,a.h)
     table.insert(self.items,a)
+
+    return a
 end
 
 function temp:update(dt)

@@ -61,7 +61,13 @@ function level:initLevel(level)
     for k,v in ipairs(self.map.data.sprites) do
         local e=self.enemies[v.id]
         if e then
-            e:new(v.x,v.y)
+            local en=e:new(v.x,v.y)
+            en.px,en.py=v.x,v.y
+            en.y=0
+
+            timer.tween(1,en,{x=en.px,y=en.py},"out-back",function()
+                self.world:update(en,math.floor(en.x+0.5),math.floor(en.y+0.5))
+            end)
         end
 
         local d=data.specialItems
@@ -81,18 +87,29 @@ function level:initLevel(level)
 
     --init player
     local spawnX,spawnY=8,conf.gh-18
+    local px,py=self.player.x,self.player.y
+
+    if self.first then
+        px,py=conf.gw/2,conf.gh/2
+    end
+
     for _,v in ipairs(self.map.data.sprites or {}) do
         if v.id=="player" then
             spawnX,spawnY=v.x+1,v.y+1
         end
     end
-    self.player:init(self,spawnX,spawnY)
+    self.player:init(self,px,py)
 
     --init draw stuff
     self.map.oy=-conf.gh
-    self.drawOpacity=0
+    self.drawOpacity=1
+
+    timer.tween(1.2,self.player,{x=spawnX,y=spawnY},"out-cubic",function()
+        self.world:update(self.player,math.floor(self.player.x+0.5),math.floor(self.player.y+0.5))
+    end)
     timer.tween(1.5,self.map,{oy=0},"in-out-back",function()
-        timer.tween(0.2,self,{drawOpacity=1},"out-cubic")
+        --timer.tween(0.2,self,{drawOpacity=1},"out-cubic")
+        
         timer.after(0.5,function()
             self.active=true
         end)

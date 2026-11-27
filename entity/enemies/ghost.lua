@@ -23,6 +23,7 @@ function temp:new(x,y)
         a.hat=437
     end
     table.insert(self.items,a)
+    return a
 end
 
 function temp:update(dt)
