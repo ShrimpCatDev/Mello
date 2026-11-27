@@ -76,6 +76,11 @@ function shroom:update(dt)
                             v.gonnaJump=false
                             v.anim=v.animRun
                             v.jumping=true
+
+                            if v.squish then timer.cancel(v.squish) end
+                            v.squish=timer.tween(0.2,v,{bw=0.6,bh=1.4},"out-quad",function()
+                                v.squish=timer.tween(0.3,v,{bw=1,bh=1},"out-back")
+                            end)
                         end)
                     end
                 end
