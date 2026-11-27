@@ -55,13 +55,14 @@ function pl:init(parent,x,y)
         self.hp=self.maxHp
     end
 
-    
-    
-
     self.invis=0
     self.maxInvis=4
     self.move=true
     self.canDie=true
+
+    if self.squish then timer.cancel(self.squish) end
+    self.sw=1
+    self.sh=1
 end
 
 function pl:damage(hp)
@@ -126,6 +127,13 @@ function pl:update(dt)
     if self.jump and input:pressed("jump") then
         self.vy=-self.jumpHeight
         assets.sfx.jump:play()
+
+        if self.squish then timer.cancel(self.squish) end
+        --self.sw=1
+        --self.sh=1
+        self.squish=timer.tween(0.2,self,{sw=0.6,sh=1.4},"out-cubic",function()
+            self.squish=timer.tween(0.3,self,{sw=1,sh=1},"out-back")
+        end)
     end
 
     local spd=80
@@ -158,6 +166,13 @@ function pl:update(dt)
         local s=assets.sfx.shoot:clone()
         s:setPitch(love.math.random(80,120)/100)
         s:play()
+
+        if self.squish then timer.cancel(self.squish) end
+        --self.sw=1
+        --self.sh=1
+        self.squish=timer.tween(0.08,self,{sw=1.4,sh=0.6},"out-quad",function()
+            self.squish=timer.tween(0.12,self,{sw=1,sh=1},"out-elastic")
+        end)
     end
 
     for k,v in ipairs(self.bullets) do
@@ -208,7 +223,7 @@ function pl:draw()
             lg.setColor(1,1,1,math.floor((love.timer.getTime()*32)%2)+0.5)
         end
 
-        sheet:draw(self.anim.current:get(),pl.x-1+o,pl.y-1,0,self.dir,1)
+        sheet:draw(self.anim.current:get(),self.x-1+4,self.y-1+8,0,self.dir*self.sw,self.sh,4,8)
         lg.setColor(1,1,1,1)
     end)
 end
