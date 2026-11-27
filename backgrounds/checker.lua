@@ -9,6 +9,7 @@ function bg:update()
 end
 
 function bg:draw()
+    lg.setColor(1,1,1,1)
     --colors for the bg
     local colors={
         {0.05,0.05,0.1},
@@ -22,6 +23,7 @@ function bg:draw()
             local xx=(x*8)+(love.timer.getTime()*4)%8
             local yy=(y*8)+(love.timer.getTime()*4)%8
             lg.rectangle("fill",xx,yy,8,8)
+            --sheet:draw(162,x*8,y*8)
         end
     end
 end

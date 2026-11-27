@@ -187,6 +187,7 @@ function exp:draw()
             end
 
             if self.mode=="select" then
+                lg.clear(0.5,0.5,0.5)
                 for i=0,#self.map.sheet.quads-1 do
                     self.map:drawTile(i,(i%(conf.gw/8))*8,math.floor(i/(conf.gw/8))*8)
                 end

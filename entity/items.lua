@@ -14,15 +14,15 @@ function items:init(parent)
 
         ["speedPotion"]={name="speedPotion",sprite=513,points=200,func=function(v,pl)
             pl.speed=100
-        end},
+        end,msg="+speed"},
         ["healPotion"]={name="healPotion",sprite=518,points=250,func=function(v,pl)
             pl.hp=pl.hp+1
             pl.hp=math.min(pl.hp,pl.maxHp)
-        end},
+        end,msg="+hp"},
         ["healthPotion"]={name="healthPotion",sprite=515,points=250,func=function(v,pl)
             pl.maxHp=pl.maxHp+1
             pl.maxHp=math.min(pl.maxHp,10)
-        end}
+        end,msg="+max"}
     }
     self.get={}
     self.timer=timer:new()
@@ -92,7 +92,7 @@ function items:update(dt)
                     0,-20,0,0,
                     1,
                     function(x,y,lt,time,d)
-                        local t=self.foods[v.id].points
+                        local t=self.foods[v.id].msg or self.foods[v.id].points
                         lg.setColor(color("#f7f1e4",math.floor((love.timer.getTime()*16)%2)+0.5))
                         local f=lg.getFont()
                         lg.print(t,x-f:getWidth(t)/2,y-f:getHeight()/2)
