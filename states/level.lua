@@ -65,7 +65,7 @@ function level:initLevel(level)
             en.px,en.py=v.x,v.y
             en.y=0
 
-            timer.tween(1,en,{x=en.px,y=en.py},"out-back",function()
+            timer.tween(math.random(7,10)/10,en,{x=en.px,y=en.py},"out-back",function()
                 self.world:update(en,math.floor(en.x+0.5),math.floor(en.y+0.5))
             end)
         end
